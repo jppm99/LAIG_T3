@@ -1,6 +1,6 @@
 class Plane extends CGFobject{
 
-    constructor(scene, u, v) {
+    constructor(scene, id, u, v) {
         super(scene);
 
         this.u = (u === undefined ? 20 : u);
