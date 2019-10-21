@@ -8,8 +8,9 @@ var LIGHTS_INDEX = 3;
 var TEXTURES_INDEX = 4;
 var MATERIALS_INDEX = 5;
 var TRANSFORMATIONS_INDEX = 6;
-var PRIMITIVES_INDEX = 7;
-var COMPONENTS_INDEX = 8;
+var ANIMATIONS_INDEX = 7;
+var PRIMITIVES_INDEX = 8;
+var COMPONENTS_INDEX = 9;
 
 /**
  * MySceneGraph class, representing the scene graph.
@@ -168,6 +169,18 @@ class MySceneGraph {
 
             //Parse transformations block
             if ((error = this.parseTransformations(nodes[index])) != null)
+                return error;
+        }
+
+        // <animations>
+        if ((index = nodeNames.indexOf("animations")) == -1)
+            return "tag <animations> missing";
+        else {
+            if (index != ANIMATIONS_INDEX)
+                this.onXMLMinorError("tag <animations> out of order");
+
+            //Parse animations block
+            if ((error = this.parseAnimations(nodes[index])) != null)
                 return error;
         }
 
@@ -739,6 +752,67 @@ class MySceneGraph {
         return null;
     }
 
+
+    /**
+     * Parses the <animations> block.
+     * @param {animations block element} animationsNode
+     */
+    parseAnimations(animationsNode) {
+        this.onXMLMinorError("TODO: Parse Animations");
+        var children = animationsNode.children;
+
+        this.animations = [];
+
+        var grandChildren = [];
+        var grandgrandChildren = [];
+        var nodeNames = [];
+
+        // Any number of animations.
+        for (var i = 0; i < children.length; i++) {
+
+            if (children[i].nodeName != "animation") {
+                this.onXMLMinorError("unknown tag <" + children[i].nodeName + ">");
+                continue;
+            }
+
+            // Get id of the current animation.
+            var animationID = this.reader.getString(children[i], 'id');
+            if (animationID == null)
+                return "no ID defined for animationID";
+
+            // Checks for repeated IDs.
+            if (this.animations[animationID] != null)
+                return "ID must be unique for each animation (conflict: ID = " + animationID + ")";
+
+            grandChildren = children[i].children;
+            if(grandChildren.length<1)
+                return "animation with Id "+animationID +" doesn't have any keyframes";
+
+            // Any number of keyframes.
+            for(var j = 0; j < grandChildren.length; j++) {
+
+                if (grandChildren[j].nodeName != "keyframe") {
+                    this.onXMLMinorError("unknown tag <" + grandChildren[j].nodeName + ">");
+                    continue;
+                }
+
+                // Get instant of the current keyframe.
+                var instant = this.reader.getFloat(grandChildren[j], 'instant');
+                if (!(instant != null && !isNaN(instant)))
+                    return "unable to parse instant of keyframe for animation with ID " + animationID;
+
+
+                // Checks if this keyframe is in the right order (instant>prev_instants).
+                this.onXMLMinorError("Check if this keyframe is in the right order (instant>prev_instants).");
+
+                grandgrandChildren = children[i].children;
+                this.onXMLMinorError("Parse the transformations");
+            }
+
+        }
+    }
+
+
     /**
      * Parses the <primitives> block.
      * @param {primitives block element} primitivesNode
@@ -806,7 +880,7 @@ class MySceneGraph {
 
                 this.primitives[primitiveId] = rect;
 
-            } else if (primitiveType == 'cylinder') {
+            } else if (primitiveType == 'cylinder' || primitiveType == 'cylinder2') {
                 //base
                 var base = this.reader.getFloat(grandChildren[0], 'base');
                 if (!(base != null && !isNaN(base)))
@@ -832,7 +906,11 @@ class MySceneGraph {
                 if (!(stacks != null && !isNaN(stacks)))
                     return "unable to parse stacks of the primitive coordinates for ID = " + primitiveId;
 
-                var cylinder = new MyCylinder(this.scene, primitiveId, base, top, height, slices, stacks);
+                var cylinder;
+                if(primitiveType == 'cylinder')
+                    cylinder = new MyCylinder(this.scene, primitiveId, base, top, height, slices, stacks);
+                else
+                    cylinder= new MyCylinder2(this.scene, primitiveId, base, top, height, slices, stacks);
 
                 this.primitives[primitiveId] = cylinder;
 
@@ -933,6 +1011,67 @@ class MySceneGraph {
                 var torus = new MyTorus(this.scene, primitiveId, inner, outer, slices, loops);
 
                 this.primitives[primitiveId] = torus;
+
+            }else if (primitiveType == 'plane'){
+                // npartsU
+                var npartsU = this.reader.getInteger(grandChildren[0], 'npartsU');
+                if (!(npartsU != null && !isNaN(npartsU)))
+                    return "unable to parse npartsU of the primitive coordinates for ID = " + primitiveId;
+
+                // npartsV
+                var npartsV = this.reader.getInteger(grandChildren[0], 'npartsV');
+                if (!(npartsV != null && !isNaN(npartsV)))
+                    return "unable to parse npartsV of the primitive coordinates for ID = " + primitiveId;
+
+                var plane = new Plane(this.scene, primitiveId, npartsU, npartsV);
+
+                this.primitives[primitiveId] = plane;
+
+            }else if(primitiveType == 'patch'){
+                // npointsU
+                var npointsU = this.reader.getInteger(grandChildren[0], 'npointsU');
+                if (!(npointsU != null && !isNaN(npointsU)))
+                    return "unable to parse npointsU of the primitive coordinates for ID = " + primitiveId;
+
+                // npointsV
+                var npointsV = this.reader.getInteger(grandChildren[0], 'npointsV');
+                if (!(npointsV != null && !isNaN(npointsV)))
+                    return "unable to parse npointsV of the primitive coordinates for ID = " + primitiveId;
+
+                // npartsU
+                var npartsU = this.reader.getInteger(grandChildren[0], 'npartsU');
+                if (!(npartsU != null && !isNaN(npartsU)))
+                    return "unable to parse npartsU of the primitive coordinates for ID = " + primitiveId;
+
+                // npartsV
+                var npartsV = this.reader.getInteger(grandChildren[0], 'npartsV');
+                if (!(npartsV != null && !isNaN(npartsV)))
+                    return "unable to parse npartsV of the primitive coordinates for ID = " + primitiveId;
+
+                // controlpoints
+                var controlpoints = [];
+                var n_controlpoints=0;
+
+                var grandgrandChildren=grandChildren[0].children;
+                for (var k = 0; k < grandgrandChildren.length; k++) {
+                    if(grandgrandChildren[k].nodeName!= "controlpoint"){
+                        this.onXMLMinorError("unknown tag <" + grandgrandChildren[k].nodeName + "> (only tag <controlpoint> allowed)");
+                        continue;
+                    }
+
+                    var aux = this.parseCoordinates3D(grandgrandChildren[k], "controlpoint for primitive with ID " + primitiveId);
+                    if (!Array.isArray(aux))
+                        return aux;
+
+                    controlpoints.push(aux);
+                    n_controlpoints++;
+                }if( n_controlpoints != npointsU * npointsV){
+                    return "primitive patch whith id "+primitiveId+" doesn't have the correct number of controlpoints. (Expected: "+ npointsU*npointsV+" Declared: "+n_controlpoints+")";
+                }
+
+                var patch = new Patch(this.scene, primitiveId,npointsU, npointsV, npartsU, npartsV, controlpoints);
+
+                this.primitives[primitiveId] = patch;
 
             }
             else {
@@ -1065,6 +1204,16 @@ class MySceneGraph {
             }
 
 
+            // Animation
+            var animationRefIndex = nodeNames.indexOf("animationref");
+            if (animationRefIndex  != -1){
+                // Get animationId of the current component.
+                var animationRef = this.reader.getString(grandChildren[animationRefIndex], 'id');
+                if (animationRef == null)
+                    return "no ID defined for animationref of component with Id "+ componentID;
+            }
+
+
             // Materials
             var materialsIndex = nodeNames.indexOf("materials");
             var materialref=[];
@@ -1158,7 +1307,7 @@ class MySceneGraph {
                     }
                 }
             }
-            var sceneComponent=new SceneComponent(this, componentID, this.scene, component_componenterefs, component_primitiverefs, component_transformationref, materialref, textureref, length_s, length_t);
+            var sceneComponent=new SceneComponent(this, componentID, this.scene, component_componenterefs, component_primitiverefs, component_transformationref, materialref, textureref, length_s, length_t, animationRef);
             this.components[componentID] = sceneComponent;
         }
     }

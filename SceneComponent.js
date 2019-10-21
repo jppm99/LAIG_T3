@@ -11,10 +11,11 @@
  * @param texture_ref - ID of texture that will/can be applied to the component
  * @param length_s - texture scale factor
  * @param length_t - texture scale factor
+ * @param animation_ref - ID of animation applied to the component
  */
 
 class SceneComponent {
-    constructor(graph,id, scene, children_components, children_primitives, transformationId, materials_refs, texture_ref, length_s, length_t){
+    constructor(graph,id, scene, children_components, children_primitives, transformationId, materials_refs, texture_ref, length_s, length_t, animation_ref){
         this.graph=graph;
         this.scene=scene;
         this.transformationId=transformationId;
@@ -26,6 +27,8 @@ class SceneComponent {
         this.texture_ref=texture_ref;
         this.length_s=length_s;
         this.length_t=length_t;
+
+        this.animation_ref=animation_ref;
     }
 
     display(inherited_material, inherited_texture, inherited_lenght_s, inherited_lenght_t){

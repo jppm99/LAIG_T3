@@ -95,6 +95,11 @@
         </transformation>
     </transformations>
 
+    <!-- specification of all animations -->
+    <animations>
+
+    </animations>
+
     <!-- specification of all primitives -->
     <primitives>
         <primitive id="demoRectangle">
