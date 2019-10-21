@@ -3,8 +3,7 @@ class MyCylinder2 extends CGFobject{
     constructor(scene, id, base, top, height, slices, stacks) {
         super(scene);
 
-        this.slices = (slices === undefined ? 20 : slices);
-
+        this.slices = slices;
         this.bradius = base;
         this.tradius = top;
         this.height = height;
@@ -14,24 +13,6 @@ class MyCylinder2 extends CGFobject{
     };
 
     initBuffers() {
-        /*
-        let surface =  new CGFnurbsSurface(1, // degree on U: 2 control vertexes U
-            1, // degree on V: 2 control vertexes on V
-            [	// U = 0
-                [ // V = 0..1;
-                    [-0.5,  0, 0.5, 1 ],
-                    [-0.5, 0, -0.5, 1 ]
-
-                ],
-                // U = 1
-                [ // V = 0..1
-                    [ 0.5, 0, 0.5, 1 ],
-                    [ 0.5, 0, -0.5, 1 ]
-                ]
-            ], // translation of surface
-            [0,0,0]
-        );
-        */
 
         var r2s2 = Math.sqrt(2) / 2;
 
@@ -87,11 +68,12 @@ class MyCylinder2 extends CGFobject{
             [0,0,0]
         );
 
-        this.cylinder = new CGFnurbsObject(this.scene, this.slices, this.slices, surface);
+        this.cylinder = new CGFnurbsObject(this.scene, this.slices, this.stacks, surface);
     }
 
     display() {
         this.scene.pushMatrix();
+        this.scene.translate(0.15, 0.15, 0);
         this.scene.rotate(-Math.PI / 2, 1, 0, 0);
         this.scene.scale(-1, -1, -1);
         this.cylinder.display();
