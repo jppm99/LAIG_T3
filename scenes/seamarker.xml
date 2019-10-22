@@ -123,6 +123,15 @@
         <primitive id="demoTorus">
             <torus inner="1.1" outer="2" slices="12" loops="12" />
         </primitive>
+
+        <primitive id="demoPatch">
+            <patch npointsU="2" npointsV="2" npartsU="20" npartsV="20">
+                <controlpoint x="-2" y="-2" z="1" />
+                <controlpoint x="-2" y="2" z="1" />
+                <controlpoint x="2" y="-2" z="1" />
+                <controlpoint x="2" y="2" z="1" />
+            </patch>
+        </primitive>
     </primitives>
 
     <!-- specification of all components: objects  -->
@@ -139,6 +148,7 @@
             <texture id="none" />
 
             <children>
+                 <primitiveref id="demoPatch" />
                  <componentref id="seaMarker" />
                  <componentref id="skyBox" />
              </children>
