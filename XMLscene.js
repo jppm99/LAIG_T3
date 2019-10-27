@@ -201,4 +201,19 @@ class XMLscene extends CGFscene {
         this.popMatrix();
         // ---- END Background, camera and axis setup
     }
+
+    update(currTime) {
+        super.update(currTime);
+
+        this.lastTime = this.lastTime || 0.0;
+        this.deltaTime = currTime - this.lastTime || 0.0;
+        this.lastTime = currTime;
+
+        this.deltaTime = this.deltaTime/1000; //in seconds
+
+        for(var animation in this.graph.animations){
+            this.graph.animations[animation].update(this.deltaTime);
+        }
+
+    }
 }

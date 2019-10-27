@@ -758,7 +758,6 @@ class MySceneGraph {
      * @param {animations block element} animationsNode
      */
     parseAnimations(animationsNode) {
-        this.onXMLMinorError("TODO: Parse Animations");
         var children = animationsNode.children;
 
         this.animations = [];
@@ -789,6 +788,8 @@ class MySceneGraph {
                 return "animation with Id "+animationID +" doesn't have any keyframes";
 
             // Any number of keyframes.
+            var keyframes=[];
+            var prev_instant=-1;
             for(var j = 0; j < grandChildren.length; j++) {
 
                 if (grandChildren[j].nodeName != "keyframe") {
@@ -801,15 +802,82 @@ class MySceneGraph {
                 if (!(instant != null && !isNaN(instant)))
                     return "unable to parse instant of keyframe for animation with ID " + animationID;
 
+                if(instant < 0)
+                    return "instant can not be inferior to zero. Conflict on animation with ID " + animationID;
 
                 // Checks if this keyframe is in the right order (instant>prev_instants).
-                this.onXMLMinorError("Check if this keyframe is in the right order (instant>prev_instants).");
+                if(instant <= prev_instant )
+                    return "keyframes are out of order for animation with ID "+animationID;
 
-                grandgrandChildren = children[i].children;
-                this.onXMLMinorError("Parse the transformations");
+                prev_instant=instant;
+
+                //Parse the Animation Matrix
+                grandgrandChildren = grandChildren[j].children;
+
+                nodeNames = [];
+                for(var k=0; k < grandgrandChildren.length; k++){
+                    nodeNames.push(grandgrandChildren[k].nodeName);
+                }
+
+                var translateIndex = nodeNames.indexOf("translate");
+                var rotateIndex = nodeNames.indexOf("rotate");
+                var scaleIndex = nodeNames.indexOf("scale");
+
+                var keyframeMatrix = mat4.create();
+
+                if(translateIndex == -1)
+                    return "tag <translate> missing from keyframe with instant "+ instant + " from animation with id "+animationID;
+                else{
+                    var coordinates = this.parseCoordinates3D(grandgrandChildren[translateIndex], "translate transformation for keyframe with "+ instant +" from animation with ID " + animationID);
+                    if (!Array.isArray(coordinates))
+                        return coordinates;
+
+                    keyframeMatrix = mat4.translate(keyframeMatrix, keyframeMatrix, coordinates);
+                }
+
+                if(rotateIndex == -1)
+                    return "tag <rotate> missing from keyframe with instant "+ instant + " from animation with id "+animationID;
+                else{
+                    // angle_x
+                    var angle_x = this.reader.getFloat(grandgrandChildren[rotateIndex], 'angle_x');
+                    if (!(angle_x != null && !isNaN(angle_x)))
+                        return "unable to parse angle_x of the rotate transformation for keyframe with "+ instant +" from animation with ID " + animationID;
+
+                    // angle_y
+                    var angle_y = this.reader.getFloat(grandgrandChildren[rotateIndex], 'angle_y');
+                    if (!(angle_y != null && !isNaN(angle_y)))
+                        return "unable to parse angle_y of the rotate transformation for keyframe with "+ instant +" from animation with ID " + animationID;
+
+                    // angle_z
+                    var angle_z = this.reader.getFloat(grandgrandChildren[rotateIndex], 'angle_z');
+                    if (!(angle_z != null && !isNaN(angle_z)))
+                        return "unable to parse angle_z of the rotate transformation for keyframe with "+ instant +" from animation with ID " + animationID;
+
+                    keyframeMatrix= mat4.rotateX(keyframeMatrix, keyframeMatrix, angle_x*DEGREE_TO_RAD);
+                    keyframeMatrix= mat4.rotateY(keyframeMatrix, keyframeMatrix, angle_y*DEGREE_TO_RAD);
+                    keyframeMatrix= mat4.rotateZ(keyframeMatrix, keyframeMatrix, angle_z*DEGREE_TO_RAD);
+                }
+
+                if(scaleIndex == -1)
+                    return "tag <scale> missing from keyframe with instant "+ instant + " from animation with id "+animationID;
+                else{
+                    var coordinates = this.parseCoordinates3D(grandgrandChildren[scaleIndex], "scale transformation for keyframe with "+ instant +" from animation with ID " + animationID);
+                    if (!Array.isArray(coordinates))
+                        return coordinates;
+
+                    keyframeMatrix = mat4.scale(keyframeMatrix, keyframeMatrix, coordinates);
+                }
+
+                keyframes.push(new KeyFrame(instant, keyframeMatrix));
             }
 
+            var animation = new KeyframeAnimation(this.scene, keyframes);
+
+            this.animations[animationID]= animation;
         }
+
+        this.log("Parsed animations");
+        return null;
     }
 
 
@@ -847,8 +915,9 @@ class MySceneGraph {
             if (grandChildren.length != 1 ||
                 (grandChildren[0].nodeName != 'rectangle' && grandChildren[0].nodeName != 'triangle' &&
                     grandChildren[0].nodeName != 'cylinder' && grandChildren[0].nodeName != 'sphere' &&
-                    grandChildren[0].nodeName != 'torus' && grandChildren[0].nodeName != 'patch' && grandChildren[0].nodeName != 'cylinder2' && grandChildren[0].nodeName != 'plane')) {
-                return "There must be exactly 1 primitive type (rectangle, triangle, cylinder, sphere, torus cylinder2, patch or plane)"
+                    grandChildren[0].nodeName != 'torus' && grandChildren[0].nodeName != 'patch' &&
+                    grandChildren[0].nodeName != 'cylinder2' && grandChildren[0].nodeName != 'plane')) {
+                return "There must be exactly 1 primitive type (rectangle, triangle, cylinder, sphere, torus, cylinder2, patch or plane)"
             }
 
             // Specifications for the current primitive.
@@ -1023,7 +1092,7 @@ class MySceneGraph {
                 if (!(npartsV != null && !isNaN(npartsV)))
                     return "unable to parse npartsV of the primitive coordinates for ID = " + primitiveId;
 
-                var plane = new Plane(this.scene, primitiveId, npartsU, npartsV);
+                var plane = new MyPlane(this.scene, primitiveId, npartsU, npartsV);
 
                 this.primitives[primitiveId] = plane;
 
@@ -1059,7 +1128,7 @@ class MySceneGraph {
                         continue;
                     }
 
-                    var aux = this.parseCoordinates3D(grandgrandChildren[k], "controlpoint for primitive with ID " + primitiveId);
+                    var aux = this.parseControlPoint(grandgrandChildren[k], "controlpoint for primitive with ID " + primitiveId);
                     if (!Array.isArray(aux))
                         return aux;
 
@@ -1340,6 +1409,36 @@ class MySceneGraph {
 
         return position;
     }
+
+
+    /**
+     * Parse the coordinates for a controlpoint of a patch
+     * @param {block element} node
+     * @param {message to be displayed in case of error} messageError
+     */
+    parseControlPoint(node, messageError){
+        var position = [];
+
+        // x
+        var x = this.reader.getFloat(node, 'xx');
+        if (!(x != null && !isNaN(x)))
+            return "unable to parse x-coordinate of the " + messageError;
+
+        // y
+        var y = this.reader.getFloat(node, 'yy');
+        if (!(y != null && !isNaN(y)))
+            return "unable to parse y-coordinate of the " + messageError;
+
+        // z
+        var z = this.reader.getFloat(node, 'zz');
+        if (!(z != null && !isNaN(z)))
+            return "unable to parse z-coordinate of the " + messageError;
+
+        position.push(...[x, y, z]);
+
+        return position;
+    }
+
 
     /**
      * Parse the coordinates from a node with ID = id

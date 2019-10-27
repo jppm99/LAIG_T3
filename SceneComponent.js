@@ -55,6 +55,10 @@ class SceneComponent {
             this.scene.multMatrix(this.graph.transformations[this.transformationId]);
         }
 
+        if(this.animation_ref!=null){
+            this.graph.animations[this.animation_ref].apply();
+        }
+
         //Apply texture if required or remove it if not
         if(curr_texture!="none"){
             this.graph.materials[curr_material].setTexture(this.graph.textures[curr_texture]);
