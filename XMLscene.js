@@ -130,7 +130,7 @@ class XMLscene extends CGFscene {
         this.rttView = this.graph.defaultViewID;
 
         this.securityCamera = new MySecurityCamera(this);
-        this.updateCamera();
+        this.updateCamera(false);
 
         this.scShader = new CGFshader(this.gl, "shaders/sc.vert", "shaders/sc.frag");
 
