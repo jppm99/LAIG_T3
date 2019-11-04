@@ -35,7 +35,9 @@ class XMLscene extends CGFscene {
 
         this.mCounter = 0;
         this.selectedView = 'defaultCamera';
-        this.lastView = 'defaultCamera';
+        this.rttView = 'defaultCamera';
+
+        this.rtt = new CGFtextureRTT(this, 1920, 1080);
     }
 
     increaseM() {
@@ -122,28 +124,30 @@ class XMLscene extends CGFscene {
         }
 
         this.interface.addViews(this.viewKeys);
+        this.interface.addSCViews(this.viewKeys);
 
         this.selectedView = this.graph.defaultViewID;
-        this.lastView = this.selectedView;
+        this.rttView = this.graph.defaultViewID;
 
+        this.securityCamera = new MySecurityCamera(this);
         this.updateCamera();
 
         this.sceneInited = true;
     }
 
-    updateCamera(){
-        console.log("*********** Changed View to " + this.selectedView + " ***********");
+    updateCamera(rtt){
+        //console.log("*********** Changed View to " + this.selectedView + " ***********");
 
         // uncomment to log current view parameters
         //for(var key in this.graph.views[this.selectedView]) if(this.graph.views[this.selectedView].hasOwnProperty(key)) console.log("KEY: " + key + " -- VALUE: " + this.graph.views[this.selectedView][key]);
 
+        let view = this.graph.views[( rtt ? this.rttView : this.selectedView)];
 
-        let view = this.graph.views[this.selectedView];
-
-        if(view[0] == 'perspective')
-            this.camera = new CGFcamera(view[3]*DEGREE_TO_RAD, view[1], view[2], view[4], view[5]);
+        if (view[0] == 'perspective')
+            this.camera = new CGFcamera(view[3] * DEGREE_TO_RAD, view[1], view[2], view[4], view[5]);
         else
             this.camera = new CGFcameraOrtho(view[3], view[4], view[6], view[5], view[1], view[2], view[7], view[8], (view[9] == undefined ? vec3.fromValues(0, 1, 0) : view[9]));
+
 
         this.gui.setActiveCamera(this.camera);
     }
@@ -151,16 +155,8 @@ class XMLscene extends CGFscene {
     /**
      * Displays the scene.
      */
-    display() {
-
-        if (!this.sceneInited)
-            return;
+    render() {
         // ---- BEGIN Background, camera and axis setup
-
-        if(this.selectedView != this.lastView){
-            this.lastView = this.selectedView;
-            this.updateCamera();
-        }
 
         // Clear image and depth buffer everytime we update the scene
         this.gl.viewport(0, 0, this.gl.canvas.width, this.gl.canvas.height);
@@ -200,6 +196,23 @@ class XMLscene extends CGFscene {
 
         this.popMatrix();
         // ---- END Background, camera and axis setup
+    }
+
+    display() {
+        if (!this.sceneInited)
+            return;
+
+        this.updateCamera(true);
+        this.rtt.attachToFrameBuffer();
+        this.render();
+
+        this.updateCamera(false);
+        this.rtt.detachFromFrameBuffer();
+        this.render();
+
+        this.gl.disable(this.gl.DEPTH_TEST);
+        this.securityCamera.display();
+        this.gl.enable(this.gl.DEPTH_TEST);
     }
 
     update(currTime) {

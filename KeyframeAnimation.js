@@ -43,7 +43,7 @@ class KeyframeAnimation extends Animation {
     }
 
     apply() {
-        this.scene.multiply(this.AnimationMatrix);
+        this.scene.multMatrix(this.AnimationMatrix);
     }
 
     subtract(out, a, b) {

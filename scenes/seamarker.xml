@@ -159,6 +159,8 @@
             <transformation>
             </transformation>
 
+            <animationref id="demoAnimation" />
+
             <materials>
                 <material id="demoMaterial" />
             </materials>
@@ -166,7 +168,7 @@
             <texture id="none" />
 
             <children>
-                 <primitiveref id="demoPatch" />
+                 <!--<primitiveref id="demoPatch" />-->
                  <componentref id="seaMarker" />
                  <componentref id="skyBox" />
              </children>
