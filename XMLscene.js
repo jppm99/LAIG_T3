@@ -132,6 +132,8 @@ class XMLscene extends CGFscene {
         this.securityCamera = new MySecurityCamera(this);
         this.updateCamera();
 
+        this.scShader = new CGFshader(this.gl, "shaders/sc.vert", "shaders/sc.frag");
+
         this.sceneInited = true;
     }
 
@@ -210,8 +212,12 @@ class XMLscene extends CGFscene {
         this.rtt.detachFromFrameBuffer();
         this.render();
 
+        this.rtt.bind();
+
         this.gl.disable(this.gl.DEPTH_TEST);
+        this.setActiveShader(this.scShader);
         this.securityCamera.display();
+        this.setActiveShader(this.defaultShader);
         this.gl.enable(this.gl.DEPTH_TEST);
     }
 
