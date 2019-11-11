@@ -2,9 +2,14 @@
 precision highp float;
 #endif
 
-uniform float time;
 varying vec2 vTextureCoord;
+
+uniform float time;
 uniform sampler2D uSampler;
+uniform float height, width;
+
+float lineSize = 0.01;
+float lineIntensity = 0.7;
 
 float menor(float x, float y) {
     if(x<y) return x;
@@ -21,28 +26,33 @@ float mod(float x) {
     else return x;
 }
 
-float lineSize = 0.01;
-float lineIntensity = 0.7;
 
 void main() {
 
-	 vec4 ogTex = texture2D(uSampler, vTextureCoord / 1.13);
+	vec2 batota = vec2(1.0, 1.0);
 
-	 float dist = ((vTextureCoord.x - 0.5) * (vTextureCoord.x - 0.5)) + ((vTextureCoord.y - 0.5) * (vTextureCoord.y - 0.5));
+	batota.x = 1920.0 / width;
+	batota.y = 1080.0 / height;
 
-	 float sombra = dist / 2.0;
+	vec2 correctedTC = vec2(vTextureCoord.x / batota.x, vTextureCoord.y / batota.y);
 
-	 for(int i = 0; i < 3; i++){
-	    ogTex[i] = maior(ogTex[i] - sombra, 0.0);
-	 }
+	vec4 ogTex = texture2D(uSampler, correctedTC);
+
+	float dist = ((vTextureCoord.x - 0.5) * (vTextureCoord.x - 0.5)) + ((vTextureCoord.y - 0.5) * (vTextureCoord.y - 0.5));
+
+	float sombra = dist / 2.0;
+
+	for(int i = 0; i < 3; i++){
+		ogTex[i] = maior(ogTex[i] - sombra, 0.0);
+	}
 
 
-	 if(mod(vTextureCoord.y - time) < lineSize) {
-	    for(int i = 0; i < 3; i++){
-	        ogTex[i] = menor(1.0, ogTex[i] + (lineIntensity - mod(vTextureCoord.y - time) - lineSize));
-	    }
-	 }
+	if(mod(vTextureCoord.y - time) < lineSize) {
+		for(int i = 0; i < 3; i++) {
+			ogTex[i] = menor(1.0, ogTex[i] + (lineIntensity - mod(vTextureCoord.y - time) - lineSize));
+		}
+	}
 
 
-	 gl_FragColor = ogTex;
+	gl_FragColor = ogTex;
 }

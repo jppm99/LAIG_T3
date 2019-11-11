@@ -20,7 +20,7 @@ class XMLscene extends CGFscene {
      */
     init(application) {
         super.init(application);
-        let fps = 15;
+        let fps = 10;
 
         this.sceneInited = false;
 
@@ -250,7 +250,7 @@ class XMLscene extends CGFscene {
         this.gl.disable(this.gl.DEPTH_TEST);
         this.setActiveShader(this.scShader);
         this.y += 0.01;
-        this.scShader.setUniformsValues({time : this.y % 1});
+        this.scShader.setUniformsValues({time : this.y % 1, height : this.gl.canvas.height, width : this.gl.canvas.width});
         this.securityCamera.display();
         this.setActiveShader(this.defaultShader);
         this.gl.enable(this.gl.DEPTH_TEST);
