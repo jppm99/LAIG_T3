@@ -20,6 +20,7 @@ class XMLscene extends CGFscene {
      */
     init(application) {
         super.init(application);
+        let fps = 15;
 
         this.sceneInited = false;
 
@@ -31,11 +32,13 @@ class XMLscene extends CGFscene {
         this.gl.depthFunc(this.gl.LEQUAL);
 
         this.axis = new CGFaxis(this);
-        this.setUpdatePeriod(100);
+        this.setUpdatePeriod(1000/fps);
 
         this.mCounter = 0;
         this.selectedView = 'defaultCamera';
+        this.lastSelectedView = 'defaultCamera';
         this.rttView = 'defaultCamera';
+        this.lastRttView = 'defaultCamera';
 
         this.rtt = new CGFtextureRTT(this, 1920, 1080);
     }
@@ -130,39 +133,51 @@ class XMLscene extends CGFscene {
         this.rttView = this.graph.defaultViewID;
 
         this.securityCamera = new MySecurityCamera(this);
-        this.updateCamera(false);
+        this.updateCamera(false, true);
 
         this.scShader = new CGFshader(this.gl, "shaders/sc.vert", "shaders/sc.frag");
 
         this.sceneInited = true;
     }
 
-    updateCamera(rtt){
+    updateCamera(rtt, update){
         //console.log("*********** Changed View to " + this.selectedView + " ***********");
 
         // uncomment to log current view parameters
         //for(var key in this.graph.views[this.selectedView]) if(this.graph.views[this.selectedView].hasOwnProperty(key)) console.log("KEY: " + key + " -- VALUE: " + this.graph.views[this.selectedView][key]);
 
-        let view = this.graph.views[( rtt ? this.rttView : this.selectedView)];
+        if(update) {
+            let view = this.graph.views[(rtt ? this.rttView : this.selectedView)];
 
-        if (view[0] == 'perspective')
-            this.camera = new CGFcamera(view[3] * DEGREE_TO_RAD, view[1], view[2], view[4], view[5]);
-        else
-            this.camera = new CGFcameraOrtho(view[3], view[4], view[6], view[5], view[1], view[2], view[7], view[8], (view[9] == undefined ? vec3.fromValues(0, 1, 0) : view[9]));
+            if (view[0] == 'perspective')
+                if(rtt)
+                    this.RTTcam = new CGFcamera(view[3] * DEGREE_TO_RAD, view[1], view[2], view[4], view[5]);
+                else
+                    this.NormalCam = new CGFcamera(view[3] * DEGREE_TO_RAD, view[1], view[2], view[4], view[5]);
+            else
+                if(rtt)
+                    this.RTTcam = new CGFcameraOrtho(view[3], view[4], view[6], view[5], view[1], view[2], view[7], view[8], (view[9] == undefined ? vec3.fromValues(0, 1, 0) : view[9]));
+                else
+                    this.NormalCam = new CGFcameraOrtho(view[3], view[4], view[6], view[5], view[1], view[2], view[7], view[8], (view[9] == undefined ? vec3.fromValues(0, 1, 0) : view[9]));
+        }
 
-
-        this.gui.setActiveCamera(this.camera);
+        if(!rtt) this.gui.setActiveCamera(this.NormalCam);
     }
 
     /**
      * Displays the scene.
      */
-    render() {
+    render(rtt) {
         // ---- BEGIN Background, camera and axis setup
 
         // Clear image and depth buffer everytime we update the scene
         this.gl.viewport(0, 0, this.gl.canvas.width, this.gl.canvas.height);
         this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
+
+        if(rtt) this.camera = this.RTTcam;
+        else this.camera = this.NormalCam;
+        this.gui.setActiveCamera(this.camera);
+
 
         // Initialize Model-View matrix as identity (no transformation
         this.updateProjectionMatrix();
@@ -197,21 +212,38 @@ class XMLscene extends CGFscene {
         this.graph.displayScene();
 
         this.popMatrix();
-        // ---- END Background, camera and axis setup
+
+        // ---- END
     }
 
     display() {
-        if (!this.sceneInited)
+        if (!this.sceneInited) {
             return;
+        }
 
-        this.updateCamera(true);
+        let update;
+
+        // RTT  -> last rtt comparison added for performance reasons
+        if(this.lastRttView === this.rttView) update = false;
+        else {
+            this.lastRttView = this.rttView;
+            update = true;
+        }
+        this.updateCamera(true, true);
         this.rtt.attachToFrameBuffer();
-        this.render();
+        this.render(true);
 
-        this.updateCamera(false);
+        // NORMAL
+        if(this.lastSelectedView === this.selectedView) update = false;
+        else {
+            this.lastSelectedView = this.selectedView;
+            update = true;
+        }
+        this.updateCamera(false, update);
         this.rtt.detachFromFrameBuffer();
-        this.render();
+        this.render(false);
 
+        // -----
         this.rtt.bind();
 
         this.gl.disable(this.gl.DEPTH_TEST);
