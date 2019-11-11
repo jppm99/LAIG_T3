@@ -10,6 +10,6 @@ class MySecurityCamera extends CGFobject {
     }
 
     display() {
-        //super.display();
+
     }
 }
