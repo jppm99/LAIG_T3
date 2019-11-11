@@ -6,10 +6,10 @@ class MySecurityCamera extends CGFobject {
     }
 
     initBuffers() {
-        this.rectangle = new MyRectangle(this.scene, undefined, 0, -1, 0, -1);
+        this.rectangle = new MyRectangle(this.scene, undefined, 0.5, 1, -1, -0.5);
     }
 
     display() {
-
+        this.rectangle.display();
     }
 }
