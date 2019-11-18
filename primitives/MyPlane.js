@@ -33,4 +33,15 @@ class MyPlane extends CGFobject{
     display() {
         this.plane.display();
     }
+
+    updateTexCoords(length_s, length_t) {
+        this.texCoords = [
+            0, 1/length_s,
+            1/length_t, 1/length_s,
+            0, 0,
+            1/length_t, 0
+        ];
+
+        this.updateTexCoordsGLBuffers();
+    }
 }

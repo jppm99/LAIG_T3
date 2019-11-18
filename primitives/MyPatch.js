@@ -48,7 +48,6 @@ class MyPatch extends CGFobject{
     }
 
     updateTexCoords(length_s, length_t) {
-        //TODO
-        super.updateTexCoordsGLBuffers();
+        this.updateTexCoordsGLBuffers();
     }
 }
