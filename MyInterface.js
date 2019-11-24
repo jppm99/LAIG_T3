@@ -43,6 +43,10 @@ class MyInterface extends CGFinterface {
         this.viewsGroup.add(this.scene, 'selectedView', vec).name('Selected View');
     }
 
+    addSCViews(vec){
+        this.viewsGroup.add(this.scene, 'rttView', vec).name('Security Camera View');
+    }
+
     /**
      * initKeys
      */
