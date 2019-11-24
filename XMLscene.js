@@ -12,6 +12,7 @@ class XMLscene extends CGFscene {
         super();
 
         this.interface = myinterface;
+        this.SCENE_UPDATE_PERIOD=100;
     }
 
     /**
@@ -31,7 +32,8 @@ class XMLscene extends CGFscene {
         this.gl.depthFunc(this.gl.LEQUAL);
 
         this.axis = new CGFaxis(this);
-        this.setUpdatePeriod(100);
+
+        this.setUpdatePeriod(this.SCENE_UPDATE_PERIOD);
 
         this.mCounter = 0;
         this.selectedView = 'defaultCamera';
@@ -210,6 +212,9 @@ class XMLscene extends CGFscene {
         this.lastTime = currTime;
 
         this.deltaTime = this.deltaTime/1000; //in seconds
+
+        if (!this.sceneInited)
+            return;
 
         for(var animation in this.graph.animations){
             this.graph.animations[animation].update(this.deltaTime);

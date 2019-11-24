@@ -10,79 +10,105 @@
 class KeyframeAnimation extends Animation {
     constructor(scene, keyframes) {
         super();
-        this.scene=scene;
+        this.scene = scene;
         this.keyframes = keyframes;
 
+        this.animationDone=false;
         this.currentKeyFrameIndex = 0;
-        this.previousKeyFrameMatrix = mat4.create();
 
-        this.transitionMatrix = mat4.create();
-        this.subtract(this.transitionMatrix, this.keyframes[this.currentKeyFrameIndex].matrix, this.previousKeyFrameMatrix);
+        this.time=0;
+
+        this.inicial_translate_coords=[0,0,0];
+        this.inicial_rotate_coords=[0,0,0];
+        this.inicial_scale_coords=[1,1,1];
+        this.previousInstant=0;
+
+
+        this.calculateFactors();
+
+        this.animation_translate_coords=[0,0,0];
+        this.animation_rotate_coords=[0,0,0];
+        this.animation_scale_coords=[1,1,1];
         this.AnimationMatrix = mat4.create();
     }
 
-
     update(currInstant) {
-        if (this.currentKeyFrameIndex < this.keyframes.length) {
+        this.time += currInstant;
 
-            if (currInstant > this.keyframes[this.currentKeyFrameIndex].instant) {
-                this.previousKeyFrameMatrix = this.keyframes[this.currentKeyFrameIndex].matrix;
-                this.currentKeyFrameIndex++;
+        if(this.animationDone) return;
 
-                if (this.currentKeyFrameIndex < this.keyframes.length) {
-                    this.subtract(this.transitionMatrix, this.keyframes[this.currentKeyFrameIndex].matrix, this.previousKeyFrameMatrix);
-                    this.multiplyScalarAndAdd(this.AnimationMatrix, this.previousKeyFrameMatrix, this.transitionMatrix, currInstant / this.keyframes[this.currentKeyFrameIndex].instant);
-                } else {
-                    this.AnimationMatrix = this.previousKeyFrameMatrix;
-                }
+        if(this.time > this.keyframes[this.currentKeyFrameIndex].instant){
 
-            } else {
-               this.multiplyScalarAndAdd(this.AnimationMatrix, this.previousKeyFrameMatrix, this.transitionMatrix, currInstant / this.keyframes[this.currentKeyFrameIndex].instant);
+            this.inicial_translate_coords=this.keyframes[this.currentKeyFrameIndex].translate_coords;
+            this.inicial_rotate_coords=this.keyframes[this.currentKeyFrameIndex].rotate_coords;
+            this.inicial_scale_coords=this.keyframes[this.currentKeyFrameIndex].scale_coords;
+            this.previousInstant=this.keyframes[this.currentKeyFrameIndex].instant;
+
+            this.currentKeyFrameIndex++;
+
+            if (this.currentKeyFrameIndex >= this.keyframes.length) {
+                this.animationDone=true;
+                return;
             }
+
+            this.calculateFactors();
         }
+
+        this.calculateAnimationValues();
+    }
+
+    calculateFactors(){
+        this.deltaTime=(this.keyframes[this.currentKeyFrameIndex].instant-this.previousInstant)/this.scene.SCENE_UPDATE_PERIOD;
+
+        this.translateFactor=[
+            (this.keyframes[this.currentKeyFrameIndex].translate_coords[0]-this.inicial_translate_coords[0])/this.deltaTime,
+            (this.keyframes[this.currentKeyFrameIndex].translate_coords[1]-this.inicial_translate_coords[1])/this.deltaTime,
+            (this.keyframes[this.currentKeyFrameIndex].translate_coords[2]-this.inicial_translate_coords[2])/this.deltaTime
+        ];
+
+        this.rotateFactor=[
+            (this.keyframes[this.currentKeyFrameIndex].rotate_coords[0]-this.inicial_rotate_coords[0])/this.deltaTime,
+            (this.keyframes[this.currentKeyFrameIndex].rotate_coords[1]-this.inicial_rotate_coords[1])/this.deltaTime,
+            (this.keyframes[this.currentKeyFrameIndex].rotate_coords[2]-this.inicial_rotate_coords[2])/this.deltaTime
+        ];
+
+        this.scaleFactor=[
+            Math.pow(this.keyframes[this.currentKeyFrameIndex].scale_coords[0] / this.inicial_scale_coords[0], 1/this.deltaTime),
+            Math.pow(this.keyframes[this.currentKeyFrameIndex].scale_coords[1] / this.inicial_scale_coords[1], 1/this.deltaTime),
+            Math.pow(this.keyframes[this.currentKeyFrameIndex].scale_coords[2] / this.inicial_scale_coords[2], 1/this.deltaTime)
+        ];
+    }
+
+    calculateAnimationValues(){
+        var currDeltaTime=(this.time-this.previousInstant)/this.scene.SCENE_UPDATE_PERIOD;
+
+        //translation
+        this.animation_translate_coords[0]=this.translateFactor[0]*currDeltaTime+this.inicial_translate_coords[0];
+        this.animation_translate_coords[1]=this.translateFactor[1]*currDeltaTime+this.inicial_translate_coords[1];
+        this.animation_translate_coords[2]=this.translateFactor[2]*currDeltaTime+this.inicial_translate_coords[2];
+
+        //rotation
+        this.animation_rotate_coords[0]=this.rotateFactor[0]*currDeltaTime+this.inicial_rotate_coords[0];
+        this.animation_rotate_coords[1]=this.rotateFactor[1]*currDeltaTime+this.inicial_rotate_coords[1];
+        this.animation_rotate_coords[2]=this.rotateFactor[2]*currDeltaTime+this.inicial_rotate_coords[2];
+
+        //scale
+        this.animation_scale_coords[0]=this.inicial_scale_coords[0]*Math.pow(this.scaleFactor[0], currDeltaTime);
+        this.animation_scale_coords[1]=this.inicial_scale_coords[1]*Math.pow(this.scaleFactor[1], currDeltaTime);
+        this.animation_scale_coords[2]=this.inicial_scale_coords[2]*Math.pow(this.scaleFactor[2], currDeltaTime);
     }
 
     apply() {
-        this.scene.multiply(this.AnimationMatrix);
-    }
+        this.AnimationMatrix = mat4.create();
 
-    subtract(out, a, b) {
-        out[0] = a[0] - b[0];
-        out[1] = a[1] - b[1];
-        out[2] = a[2] - b[2];
-        out[3] = a[3] - b[3];
-        out[4] = a[4] - b[4];
-        out[5] = a[5] - b[5];
-        out[6] = a[6] - b[6];
-        out[7] = a[7] - b[7];
-        out[8] = a[8] - b[8];
-        out[9] = a[9] - b[9];
-        out[10] = a[10] - b[10];
-        out[11] = a[11] - b[11];
-        out[12] = a[12] - b[12];
-        out[13] = a[13] - b[13];
-        out[14] = a[14] - b[14];
-        out[15] = a[15] - b[15];
-        return out;
-    }
+        mat4.translate(this.AnimationMatrix, this.AnimationMatrix, this.animation_translate_coords);
 
-    multiplyScalarAndAdd(out, a, b, scale) {
-        out[0] = a[0] + (b[0] * scale);
-        out[1] = a[1] + (b[1] * scale);
-        out[2] = a[2] + (b[2] * scale);
-        out[3] = a[3] + (b[3] * scale);
-        out[4] = a[4] + (b[4] * scale);
-        out[5] = a[5] + (b[5] * scale);
-        out[6] = a[6] + (b[6] * scale);
-        out[7] = a[7] + (b[7] * scale);
-        out[8] = a[8] + (b[8] * scale);
-        out[9] = a[9] + (b[9] * scale);
-        out[10] = a[10] + (b[10] * scale);
-        out[11] = a[11] + (b[11] * scale);
-        out[12] = a[12] + (b[12] * scale);
-        out[13] = a[13] + (b[13] * scale);
-        out[14] = a[14] + (b[14] * scale);
-        out[15] = a[15] + (b[15] * scale);
-        return out;
+        mat4.rotateX(this.AnimationMatrix, this.AnimationMatrix, this.animation_rotate_coords[0]);
+        mat4.rotateY(this.AnimationMatrix, this.AnimationMatrix, this.animation_rotate_coords[1]);
+        mat4.rotateZ(this.AnimationMatrix, this.AnimationMatrix, this.animation_rotate_coords[2]);
+
+        mat4.scale(this.AnimationMatrix, this.AnimationMatrix, this.animation_scale_coords);
+
+        this.scene.multMatrix(this.AnimationMatrix);
     }
 }

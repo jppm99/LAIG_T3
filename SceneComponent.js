@@ -52,7 +52,7 @@ class SceneComponent {
         this.scene.pushMatrix();
 
         if(this.transformationId!=null) {
-            this.scene.multMatrix(this.graph.transformations[this.transformationId]);
+           this.scene.multMatrix(this.graph.transformations[this.transformationId]);
         }
 
         if(this.animation_ref!=null){

@@ -823,16 +823,17 @@ class MySceneGraph {
                 var rotateIndex = nodeNames.indexOf("rotate");
                 var scaleIndex = nodeNames.indexOf("scale");
 
-                var keyframeMatrix = mat4.create();
+                var keyframe_translateCoords=[0,0,0];
+                var keyframe_rotateCoords=[0,0,0];
+                var keyframe_scaleCoords=[1,1,1];
+
 
                 if(translateIndex == -1)
                     return "tag <translate> missing from keyframe with instant "+ instant + " from animation with id "+animationID;
                 else{
-                    var coordinates = this.parseCoordinates3D(grandgrandChildren[translateIndex], "translate transformation for keyframe with "+ instant +" from animation with ID " + animationID);
-                    if (!Array.isArray(coordinates))
-                        return coordinates;
-
-                    keyframeMatrix = mat4.translate(keyframeMatrix, keyframeMatrix, coordinates);
+                    keyframe_translateCoords = this.parseCoordinates3D(grandgrandChildren[translateIndex], "translate transformation for keyframe with "+ instant +" from animation with ID " + animationID);
+                    if (!Array.isArray(keyframe_translateCoords))
+                        return keyframe_translateCoords;
                 }
 
                 if(rotateIndex == -1)
@@ -853,22 +854,18 @@ class MySceneGraph {
                     if (!(angle_z != null && !isNaN(angle_z)))
                         return "unable to parse angle_z of the rotate transformation for keyframe with "+ instant +" from animation with ID " + animationID;
 
-                    keyframeMatrix= mat4.rotateX(keyframeMatrix, keyframeMatrix, angle_x*DEGREE_TO_RAD);
-                    keyframeMatrix= mat4.rotateY(keyframeMatrix, keyframeMatrix, angle_y*DEGREE_TO_RAD);
-                    keyframeMatrix= mat4.rotateZ(keyframeMatrix, keyframeMatrix, angle_z*DEGREE_TO_RAD);
+                    keyframe_rotateCoords=[ angle_x*DEGREE_TO_RAD, angle_y*DEGREE_TO_RAD, angle_z*DEGREE_TO_RAD];
                 }
 
                 if(scaleIndex == -1)
                     return "tag <scale> missing from keyframe with instant "+ instant + " from animation with id "+animationID;
                 else{
-                    var coordinates = this.parseCoordinates3D(grandgrandChildren[scaleIndex], "scale transformation for keyframe with "+ instant +" from animation with ID " + animationID);
-                    if (!Array.isArray(coordinates))
-                        return coordinates;
-
-                    keyframeMatrix = mat4.scale(keyframeMatrix, keyframeMatrix, coordinates);
+                    keyframe_scaleCoords= this.parseCoordinates3D(grandgrandChildren[scaleIndex], "scale transformation for keyframe with "+ instant +" from animation with ID " + animationID);
+                    if (!Array.isArray(keyframe_scaleCoords))
+                        return keyframe_scaleCoords;
                 }
 
-                keyframes.push(new KeyFrame(instant, keyframeMatrix));
+                keyframes.push(new KeyFrame(instant, keyframe_translateCoords, keyframe_rotateCoords, keyframe_scaleCoords));
             }
 
             var animation = new KeyframeAnimation(this.scene, keyframes);
@@ -1280,6 +1277,8 @@ class MySceneGraph {
                 var animationRef = this.reader.getString(grandChildren[animationRefIndex], 'id');
                 if (animationRef == null)
                     return "no ID defined for animationref of component with Id "+ componentID;
+            }else {
+                var animationRef=null;
             }
 
 
