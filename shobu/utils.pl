@@ -9,6 +9,15 @@ get_board(Board, X, Y, B) :-
     BN is div(X-1, 4) + (2 * div(Y-1, 4)),
     board(Board, BN, B).
 
+% gamespace coords: 1-8 ; large board
+get_pos_gs(Board, X, Y, Content) :-
+    BN is  div(X-1, 4) + (2 * div(Y-1, 4)),
+    board(Board, BN, B),
+    X1 is mod(X-1, 4),
+    Y1 is mod(Y-1, 4),
+    get_pos(B, X1, Y1, Content).
+
+% index coords: 0-3 ; individual board
 get_pos(Board, X, Y, Content) :-
     nth0(Y, Board, Line),
     nth0(X, Line, Content).

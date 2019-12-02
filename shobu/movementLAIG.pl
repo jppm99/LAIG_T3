@@ -16,7 +16,9 @@ in(Board, Move1, Move2, Return) :-
     nth0(3, Move2, YF2),
 
     get_board(Board, X1, Y1, SB),
-    get_pos(SB, X1, Y1, Team),
+    XTemp is mod(X1-1, 4),
+    YTemp is mod(Y1-1, 4),
+    get_pos(SB, XTemp, YTemp, Team),
 
     move(Board, Team, X1, Y1, XF1, YF1, X2, Y2, XF2, YF2, NB),
 
@@ -28,15 +30,20 @@ out(InitialBoard, FinalBoard, Moves) :-
     compare_board(InitialBoard, FinalBoard, 2, L3),
     compare_board(InitialBoard, FinalBoard, 3, L4),
 
+    write('L1 -> '),write(L1),nl,
+    write('L2 -> '),write(L2),nl,
+    write('L3 -> '),write(L3),nl,
+    write('L4 -> '),write(L4),nl,
+
     append(L1, L2, Temp1),
     append(Temp1, L3, Temp2),
-    append(Temp22, L4, Moves).
+    append(Temp2, L4, Moves).
 
-compare_board(InitialBoard, InitialBoard, Number, Moves) :-
+compare_board(InitialBoard, FinalBoard, Number, Moves) :-
     board(InitialBoard, Number, B1),
     board(FinalBoard, Number, B2),
 
-    NL = [0, 1, 2, 3],
+    nlist(0, 3, NL),
 
     findall(
         [X,Y]
@@ -53,6 +60,8 @@ compare_board(InitialBoard, InitialBoard, Number, Moves) :-
     ,
         Diff
     ),
+
+    write(Diff), nl,
 
     length(Diff, ND),
     
@@ -71,7 +80,7 @@ compare_board(InitialBoard, InitialBoard, Number, Moves) :-
         nth0(N1, Diff, Coord1),
         Coord1 = [X1Temp,Y1Temp],
 
-        get_pos(B1, X1, Y1, Content),
+        get_pos(B1, X1Temp, Y1Temp, Content),
 
         Content \== empty,
 
@@ -80,33 +89,36 @@ compare_board(InitialBoard, InitialBoard, Number, Moves) :-
         nth0(N2, Diff, Coord2),
         Coord2 = [X2Temp2,Y2Temp2],
 
-        (get_pos(B2, X2Temp2, Y2Temp2, Content) ->
+        get_pos(B2, X2Temp2, Y2Temp2, Content2),
+
+        ( Content == Content2->
             X2Temp = X2Temp2, Y2Temp = Y2Temp2
             ;
             X2Temp = -10, Y2Temp = -10
-        ),
+        ),!,
 
         RightSide is mod(Number, 2),
-        ( RightSide =:= 1 ->
-            X1 is X1Temp + 4,
-            X2 is X2Temp + 4,
+        ( RightSide == 1 ->
+            X1 is X1Temp + 1 + 4,
+            X2 is X2Temp + 1 + 4
         ;
-            X1 = X1Temp,
-            X2 = X2Temp
+            X1 is X1Temp + 1,
+            X2 is X2Temp + 1
 
         ),
 
         ( Number > 1 ->
-            Y1 is Y1Temp + 4,
-            Y2 is Y2Temp + 4,
+            Y1 is Y1Temp + 1 + 4,
+            Y2 is Y2Temp + 1 + 4
         ;
-            Y1 = Y1Temp,
-            Y2 = Y2Temp,
+            Y1 is Y1Temp + 1,
+            Y2 is Y2Temp + 1
         )
+
     )
     ,
         ML
     ),
     sort(ML, Moves).
 
-compare_board(B1, B2, []).
+compare_board(_, _, _, []).
