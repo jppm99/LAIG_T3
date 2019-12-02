@@ -2,7 +2,7 @@
 :- consult('utils.pl').
 :- use_module(library(lists)).
 
-in(Board, Move1, Move2, Return) :-
+inMove(Board, Move1, Move2, Return) :-
     nth0(0, Move1, X1),
     nth0(0, Move2, X2),
 
@@ -20,20 +20,21 @@ in(Board, Move1, Move2, Return) :-
     YTemp is mod(Y1-1, 4),
     get_pos(SB, XTemp, YTemp, Team),
 
-    move(Board, Team, X1, Y1, XF1, YF1, X2, Y2, XF2, YF2, NB),
+    is_valid(Board, Team, X1, Y1, XF1, YF1, X2, Y2, XF2, YF2, Valid),
 
-    out(Board, NB, Return).
+    (Valid == 'success' ->
+        move(Board, Team, X1, Y1, XF1, YF1, X2, Y2, XF2, YF2, NB),
+        outMove(Board, NB, Return)
+    ;
+        Return = []
+    ).
+    
 
-out(InitialBoard, FinalBoard, Moves) :-
+outMove(InitialBoard, FinalBoard, Moves) :-
     compare_board(InitialBoard, FinalBoard, 0, L1),
     compare_board(InitialBoard, FinalBoard, 1, L2),
     compare_board(InitialBoard, FinalBoard, 2, L3),
     compare_board(InitialBoard, FinalBoard, 3, L4),
-
-    write('L1 -> '),write(L1),nl,
-    write('L2 -> '),write(L2),nl,
-    write('L3 -> '),write(L3),nl,
-    write('L4 -> '),write(L4),nl,
 
     append(L1, L2, Temp1),
     append(Temp1, L3, Temp2),
@@ -60,8 +61,6 @@ compare_board(InitialBoard, FinalBoard, Number, Moves) :-
     ,
         Diff
     ),
-
-    write(Diff), nl,
 
     length(Diff, ND),
     
@@ -92,10 +91,10 @@ compare_board(InitialBoard, FinalBoard, Number, Moves) :-
         get_pos(B2, X2Temp2, Y2Temp2, Content2),
 
         ( Content == Content2->
-            X2Temp = X2Temp2, Y2Temp = Y2Temp2
+            X2Temp = X2Temp2, Y2Temp = Y2Temp2,!
             ;
             X2Temp = -10, Y2Temp = -10
-        ),!,
+        ),
 
         RightSide is mod(Number, 2),
         ( RightSide == 1 ->
@@ -122,3 +121,6 @@ compare_board(InitialBoard, FinalBoard, Number, Moves) :-
     sort(ML, Moves).
 
 compare_board(_, _, _, []).
+
+inValidMoves(Board, Pos, Return) :-
+    /* TODO */.

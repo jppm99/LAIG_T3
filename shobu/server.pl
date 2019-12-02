@@ -104,15 +104,23 @@ print_header_line(_).
 % Require your Prolog Files here
 
 parse_input(In, Out) :-
-	nth0(0, In, Boad),
-	nth0(1, In, Move1),
-	nth0(2, In, Move2),
+	nth0(0, In, Action),
 
-	in(Boad, Move1, Move2, Out).
+	(Action == 'move' ->
+		nth0(1, In, Board),
+		nth0(2, In, Move1),
+		nth0(3, In, Move2),
+		inMove(Board, Move1, Move2, Out)
+	;
+	Action == 'valid_moves' ->
+		nth0(1, In, Board),
+		nth0(2, In, Pos),
+		inValidMoves(Board, Pos, Out)
+	;
+		Out = error
+	)
 
-parse_input(handshake, handshake).
-parse_input(test(C,N), Res) :- test(C,Res,N).
-parse_input(quit, goodbye).
+
 
 test(_,[],N) :- N =< 0.
 test(A,[A|Bs],N) :- N1 is N-1, test(A,Bs,N1).
