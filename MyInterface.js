@@ -28,6 +28,11 @@ class MyInterface extends CGFinterface {
         this.viewsGroup = this.gui.addFolder("Views");
         this.viewsGroup.close();
 
+        this.gui.add(this.scene, 'black', ["Human", "Computer1", "Computer2", "Computer3"]).name('Black player');
+        this.gui.add(this.scene, 'white', ["Human", "Computer1", "Computer2", "Computer3"]).name('White player');
+
+        this.gui.add(this.scene, 'undo').name("Undo");
+
         this.initKeys();
 
         return true;

@@ -35,19 +35,21 @@ class XMLscene extends CGFscene {
 
         this.setUpdatePeriod(this.SCENE_UPDATE_PERIOD);
 
+        this.game = new Game(this);
+
         this.mCounter = 0;
         this.selectedView = 'defaultCamera';
         this.lastSelectedView = 'defaultCamera';
         this.rttView = 'defaultCamera';
         this.lastRttView = 'defaultCamera';
 
+        this.black = 'Human';
+        this.white = 'Human';
+
         this.rtt = new CGFtextureRTT(this, 1920, 1080);
         this.y = 0;
     }
 
-    increaseM() {
-        return ++this.mCounter;
-    }
 
     /**
      * Initializes the scene lights with the values read from the XML file.
@@ -142,7 +144,15 @@ class XMLscene extends CGFscene {
         this.sceneInited = true;
     }
 
-    updateCamera(rtt, update){
+    undo() {
+        this.game.undo();
+    }
+
+    moveCamera() {
+        // Kinda TODO
+    }
+
+    async updateCamera(rtt, update, smooth){
         //console.log("*********** Changed View to " + this.selectedView + " ***********");
 
         // uncomment to log current view parameters
@@ -154,13 +164,36 @@ class XMLscene extends CGFscene {
             if (view[0] == 'perspective')
                 if(rtt)
                     this.RTTcam = new CGFcamera(view[3] * DEGREE_TO_RAD, view[1], view[2], view[4], view[5]);
-                else
+                else if (smooth == true) {
+                    let animDuration = 1; // camera transition duration in seconds
+                    let fps = 30;
+                    let frames = animDuration * fps;
+
+                    let currTarget = [this.NormalCam.target[0], this.NormalCam.target[1], this.NormalCam.target[2]];
+                    console.log("1st target: " + currTarget);
+
+                    for (let i = 0 ; i < frames ; i++) {
+                        let step = [(view[4][0] - this.NormalCam.position[0]) / (frames-i), (view[4][1] - this.NormalCam.position[1]) / (frames-i), (view[4][2] - this.NormalCam.position[2]) / (frames-i)];
+                        console.log("Movement step: " + step);
+
+                        let targetSteps = [(view[5][0] - this.NormalCam.target[0]) / (frames-i), (view[5][1] - this.NormalCam.target[1]) / (frames-i), (view[5][2] - this.NormalCam.target[2]) / (frames-i)];
+                        console.log("Target step: " + targetSteps);
+
+                        currTarget[0] += targetSteps[0];
+                        currTarget[1] += targetSteps[1];
+                        currTarget[2] += targetSteps[2];
+
+                        this.NormalCam.translate(step);
+                        this.NormalCam.setTarget(currTarget);
+                        await this.sleep(this.SCENE_UPDATE_PERIOD);
+                    }
+                    this.NormalCam.setPosition(view[4]);
+                    this.NormalCam.setTarget(view[5]);
+                }
+
+                else {
                     this.NormalCam = new CGFcamera(view[3] * DEGREE_TO_RAD, view[1], view[2], view[4], view[5]);
-            else
-                if(rtt)
-                    this.RTTcam = new CGFcameraOrtho(view[3], view[4], view[6], view[5], view[1], view[2], view[7], view[8], (view[9] == undefined ? vec3.fromValues(0, 1, 0) : view[9]));
-                else
-                    this.NormalCam = new CGFcameraOrtho(view[3], view[4], view[6], view[5], view[1], view[2], view[7], view[8], (view[9] == undefined ? vec3.fromValues(0, 1, 0) : view[9]));
+                }
         }
 
         if(!rtt) this.gui.setActiveCamera(this.NormalCam);
@@ -218,7 +251,13 @@ class XMLscene extends CGFscene {
         // ---- END
     }
 
-    display() {
+    // aka game loop
+    display(){
+        //this.game.play();
+        this._display();
+    }
+
+    _display() {
         if (!this.sceneInited) {
             return;
         }
@@ -241,7 +280,7 @@ class XMLscene extends CGFscene {
             this.lastSelectedView = this.selectedView;
             update = true;
         }
-        this.updateCamera(false, update);
+        this.updateCamera(false, update, true);
         this.rtt.detachFromFrameBuffer();
         this.render(false);
 
@@ -273,5 +312,9 @@ class XMLscene extends CGFscene {
             this.graph.animations[animation].update(this.deltaTime);
         }
 
+    }
+
+    sleep(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
     }
 }

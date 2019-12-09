@@ -1,5 +1,13 @@
 class Bridge {
 
+    makeMove(gameState, player, move1, move2) {
+        var sentArray = [];
+        sentArray.push("move", gameState, player, move1, move2);
+
+        return makeRequest(sentArray);
+    }
+
+
     getPrologRequest(requestString, onSuccess, onError, port) {
         var requestPort = port || 8081
         var request = new XMLHttpRequest();
@@ -16,16 +24,14 @@ class Bridge {
         request.send();
     }
 
-    makeRequest() {
-        // Get Parameter Values
-        var requestString = document.querySelector("#query_field").value;
-
+    makeRequest(requestString) {
         // Make Request
         getPrologRequest(requestString, handleReply);
+        return this.reply;
     }
 
     //Handle the Reply
     handleReply(data) {
-        document.querySelector("#query_result").innerHTML = data.target.response;
+        this.reply = data.target.response;
     }
 }

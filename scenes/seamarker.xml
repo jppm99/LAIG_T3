@@ -6,7 +6,7 @@
     <views default="defaultCamera">
         <perspective id="defaultCamera" near="0.1" far="400" angle="40">
             <from x="30" y="15" z="30" />
-            <to x="0" y="-2" z="0" />
+            <to x="0.5" y="-2.5" z="0.5" />
         </perspective>
         <perspective id="farCameraPerspective" near="0.2" far="750" angle="50">
             <from x="40" y="25" z="40" />

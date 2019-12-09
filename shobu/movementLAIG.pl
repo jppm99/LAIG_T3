@@ -2,7 +2,7 @@
 :- consult('utils.pl').
 :- use_module(library(lists)).
 
-inMove(Board, Move1, Move2, Return) :-
+inMove(Board, Team, Move1, Move2, Return) :-
     nth0(0, Move1, X1),
     nth0(0, Move2, X2),
 
@@ -14,11 +14,6 @@ inMove(Board, Move1, Move2, Return) :-
 
     nth0(3, Move1, YF1),
     nth0(3, Move2, YF2),
-
-    get_board(Board, X1, Y1, SB),
-    XTemp is mod(X1-1, 4),
-    YTemp is mod(Y1-1, 4),
-    get_pos(SB, XTemp, YTemp, Team),
 
     is_valid(Board, Team, X1, Y1, XF1, YF1, X2, Y2, XF2, YF2, Valid),
 

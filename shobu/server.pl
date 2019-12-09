@@ -108,9 +108,10 @@ parse_input(In, Out) :-
 
 	(Action == 'move' ->
 		nth0(1, In, Board),
-		nth0(2, In, Move1),
-		nth0(3, In, Move2),
-		inMove(Board, Move1, Move2, Out)
+		nth0(2, In, Team),
+		nth0(3, In, Move1),
+		nth0(4, In, Move2),
+		inMove(Board, Team, Move1, Move2, Out)
 	;
 	Action == 'valid_moves' ->
 		nth0(1, In, Board),
