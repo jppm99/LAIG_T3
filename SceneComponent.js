@@ -16,6 +16,7 @@
 
 class SceneComponent {
     constructor(graph,id, scene, children_components, children_primitives, transformationId, materials_refs, texture_ref, length_s, length_t, animation_ref){
+        this.id=id;
         this.graph=graph;
         this.scene=scene;
         this.transformationId=transformationId;

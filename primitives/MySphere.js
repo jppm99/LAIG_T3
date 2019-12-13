@@ -45,9 +45,14 @@ class MySphere extends CGFobject {
 
                 this.normals.push(this.radius * Math.sin(current_Radius + stacks_Degree) * Math.cos(j * slices_Degree), this.radius * Math.sin(current_Radius + stacks_Degree) * Math.sin(j * slices_Degree), this.radius * Math.cos(stacks_Degree * (i + 1))); //Normals in line with the vertexes
 
-                this.texCoords.push(0.5 + Math.cos(j * slices_Degree) * Math.sin(current_Radius), 1 - (0.5 + Math.sin(j * slices_Degree) * Math.sin(current_Radius)));
-                this.texCoords.push(0.5 + Math.cos(j * slices_Degree) * Math.sin((i + 1) * stacks_Degree), 1 - (0.5 + Math.sin(j * slices_Degree) * Math.sin((i + 1) * stacks_Degree)));
+                //this.texCoords.push(0.5 + Math.cos(j * slices_Degree) * Math.sin(current_Radius), 1 - (0.5 + Math.sin(j * slices_Degree) * Math.sin(current_Radius)));
+                //this.texCoords.push(0.5 + Math.cos(j * slices_Degree) * Math.sin((i + 1) * stacks_Degree), 1 - (0.5 + Math.sin(j * slices_Degree) * Math.sin((i + 1) * stacks_Degree)));
 
+                var vectord1=[-1*(this.radius * Math.sin(current_Radius) * Math.cos(j * slices_Degree)), -1*(this.radius * Math.sin(current_Radius) * Math.sin(j * slices_Degree)),-1*(this.radius * Math.cos(current_Radius))];
+                var vectord2=[-1*(this.radius * Math.sin(current_Radius + stacks_Degree) * Math.cos(j * slices_Degree)), -1*(this.radius * Math.sin(current_Radius + stacks_Degree) * Math.sin(j * slices_Degree)),-1*(this.radius * Math.cos(stacks_Degree * (i + 1)))];
+
+                this.texCoords.push(0.5 + Math.atan2(vectord1[1], vectord1[3])/2*Math.PI, 0.5 - Math.asin(vectord1[2])/Math.PI);
+                this.texCoords.push(0.5 + Math.atan2(vectord2[1], vectord2[3])/2*Math.PI, 0.5 - Math.asin(vectord2[2])/Math.PI);
 
                 this.indices.push((i * 2 * this.slices) + (2 * j) + 0);
                 this.indices.push((i * 2 * this.slices) + (2 * j) + 1);

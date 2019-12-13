@@ -48,25 +48,32 @@
             <specular r="0.0" g="0.0" b="0.0" a="1.0" />
         </material>
 
-        <material id="wood" shininess="10">
+        <material id="light_wood" shininess="10">
             <emission r="0.0" g="0.0" b="0.0" a="1.0" />
             <ambient r="0.8" g="0.8" b="0.8" a="1.0" />
             <diffuse r="0.6" g="0.6" b="0.6" a="1.0" />
-            <specular r="0.0" g="0.0" b="0.0" a="1.0" />
+            <specular r="0.05" g="0.05" b="0.05" a="1.0" />
         </material>
 
-        <material id="blackPiece" shininess="10">
+        <material id="darker_wood" shininess="10">
             <emission r="0.0" g="0.0" b="0.0" a="1.0" />
-            <ambient r="1.0" g="1.0" b="1.0" a="1.0" />
-            <diffuse r="0.8" g="0.8" b="0.8" a="1.0" />
-            <specular r="0.6" g="0.6" b="0.6" a="1.0" />
+            <ambient r="0.6" g="0.6" b="0.6" a="1.0" />
+            <diffuse r="0.4" g="0.4" b="0.4" a="1.0" />
+            <specular r="0.0" g="0.0" b="0.0" a="1.0" />
         </material>
 
         <material id="whitePiece" shininess="10">
             <emission r="0.0" g="0.0" b="0.0" a="1.0" />
+            <ambient r="0.8" g="0.8" b="0.8" a="1.0" />
+            <diffuse r="0.8" g="0.8" b="0.8" a="1.0" />
+            <specular r="0.4" g="0.4" b="0.4" a="1.0" />
+        </material>
+
+        <material id="blackPiece" shininess="10">
+            <emission r="0.0" g="0.0" b="0.0" a="1.0" />
             <ambient r="0.0" g="0.0" b="0.0" a="1.0" />
             <diffuse r="0.2" g="0.2" b="0.2" a="1.0" />
-            <specular r="0.1" g="0.1" b="0.1" a="1.0" />
+            <specular r="0.3" g="0.3" b="0.3" a="1.0" />
         </material>
     </materials>
 
@@ -74,23 +81,28 @@
     <!-- for use in different components -->
     <transformations>
         <transformation id="board-up-left">
-            <translate x="-5" y="0" z="-5" />
+            <translate x="-2.5" y="0" z="-3" />
         </transformation>
 
         <transformation id="board-down-left">
-            <translate x="-5" y="0" z="5" />
+            <translate x="-2.5" y="0" z="3" />
         </transformation>
 
         <transformation id="board-up-right">
-            <translate x="5" y="0" z="5" />
+            <translate x="2.5" y="0" z="3" />
         </transformation>
 
         <transformation id="board-down-right">
-            <translate x="5" y="0" z="-5" />
+            <translate x="2.5" y="0" z="-3" />
         </transformation>
 
-        <transformation id="rotateBoardRectangle">
+        <transformation id="rotateBoardBaseRectangle">
+            <translate x="0" y="-0.125" z="0" />
             <rotate axis="x" angle="-90" />
+        </transformation>
+
+        <transformation id="whitePieces">
+            <translate x="0" y="0" z="-3.375" />
         </transformation>
     </transformations>
 
@@ -99,8 +111,20 @@
 
     <!-- specification of all primitives -->
     <primitives>
-        <primitive id="boardRectangle">
-            <rectangle x1="-4" y1="-4" x2="4" y2="4" />
+        <primitive id="cellBaseRectangle">
+            <rectangle x1="-0.5" y1="-0.5" x2="0.5" y2="0.5" />
+        </primitive>
+
+        <primitive id="cellSideRectangle">
+            <rectangle x1="-0.5" y1="-0.125" x2="0.5" y2="0.125" />
+        </primitive>
+
+        <primitive id="boardBaseRectangle">
+            <rectangle x1="-2.3125" y1="-2.3125" x2="2.3125" y2="2.3125" />
+        </primitive>
+
+        <primitive id="boardSideRectangle">
+            <rectangle x1="-2.3125" y1="-0.5" x2="2.3125" y2="0" />
         </primitive>
 
         <primitive id="pieceAndRopeSphere">
@@ -108,7 +132,7 @@
         </primitive>
 
         <primitive id="ropeCylinder">
-            <cylinder base="1" top="1" height="16" slices="16" stacks="16"/>
+            <cylinder base="1" top="1" height="1" slices="16" stacks="16"/>
         </primitive>
     </primitives>
 
@@ -123,19 +147,19 @@
                 <material id="defaultMaterial" />
             </materials>
 
-            <texture id="none" />
+            <texture id="whiteWood" length_s="6" length_t="6" />
 
             <children>
-                <componentref id="rope" />
-                <componentref id="boards" />
-                <componentref id="pieces" />
+                <componentref id="boards"/>
+                <componentref id="rope"  />
+                <componentref id="pieces"/>
             </children>
         </component>
 
         <!-- Rope related Components-->
         <component id="rope">
             <transformation>
-                <scale x="1" y="0.5" z="0.5"/>
+                <scale x="1" y="0.35" z="0.35"/>
             </transformation>
 
             <materials>
@@ -152,7 +176,8 @@
 
         <component id="ropeBody">
             <transformation>
-                <translate x="-8" y="0" z="0" />
+                <scale x="9.25" y="1" z="1"/>
+                <translate x="-0.5" y="0" z="0" />
                 <rotate axis="y" angle="90"/>
             </transformation>
 
@@ -175,7 +200,7 @@
                 <material id="inherit" />
             </materials>
 
-            <texture id="inherit" />
+            <texture id="inherit"/>
 
             <children>
                 <componentref id="ropeEnd1" />
@@ -185,24 +210,9 @@
 
         <component id="ropeEnd2">
             <transformation>
+                <translate x="-4.625" y="0" z="0" />
                 <rotate axis="y" angle="180"/>
-            </transformation>
-
-            <materials>
-                <material id="inherit"/>
-            </materials>
-
-            <texture id="inherit" />
-
-            <children>
-                <componentref id="ropeEnd1"/>
-            </children>
-        </component>
-
-        <component id="ropeEnd1">
-            <transformation>
-                <translate x="8" y="0" z="0" />
-                <rotate axis="y" angle="90" />
+                <scale x="0.5" y="1" z="1"/>
             </transformation>
 
             <materials>
@@ -216,8 +226,27 @@
             </children>
         </component>
 
-        <!-- Boards related Components-->
+        <component id="ropeEnd1">
+            <transformation>
+                <translate x="4.625" y="0" z="0" />
+                <rotate axis="y" angle="180" />
+                <scale x="0.5" y="1" z="1"/>
+            </transformation>
 
+            <materials>
+                <material id="inherit"/>
+            </materials>
+
+            <texture id="inherit" />
+
+            <children>
+                <primitiveref id="pieceAndRopeSphere"/>
+            </children>
+        </component>
+
+
+
+        <!-- Boards related Components-->
         <component id="boards">
             <transformation>
             </transformation>
@@ -242,13 +271,14 @@
             </transformation>
 
             <materials>
-                <material id="wood"/>
+                <material id="light_wood"/>
             </materials>
 
-            <texture id="whiteWood" length_s="8" length_t="8"/>
+            <texture id="blackWood" length_s="8" length_t="8"/>
 
             <children>
-                <componentref id="board"/>
+                <componentref id="board-up-left-cells"/>
+                <componentref id="boardBase"/>
             </children>
         </component>
 
@@ -258,13 +288,14 @@
             </transformation>
 
             <materials>
-                <material id="wood"/>
+                <material id="light_wood"/>
             </materials>
 
-            <texture id="whiteWood" length_s="8" length_t="8"/>
+            <texture id="blackWood" length_s="8" length_t="8"/>
 
             <children>
-                <componentref id="board"/>
+                <componentref id="board-down-left-cells"/>
+                <componentref id="boardBase"/>
             </children>
         </component>
 
@@ -274,13 +305,14 @@
             </transformation>
 
             <materials>
-                <material id="wood"/>
+                <material id="light_wood"/>
             </materials>
 
-            <texture id="blackWood" length_s="8" length_t="8"/>
+            <texture id="whiteWood" length_s="8" length_t="8"/>
 
             <children>
-                <componentref id="board"/>
+                <componentref id="board-up-right-cells"/>
+                <componentref id="boardBase"/>
             </children>
         </component>
 
@@ -290,19 +322,139 @@
             </transformation>
 
             <materials>
-                <material id="wood"/>
+                <material id="light_wood"/>
             </materials>
 
-            <texture id="blackWood" length_s="8" length_t="8"/>
+            <texture id="whiteWood" length_s="8" length_t="8"/>
 
             <children>
-                <componentref id="board"/>
+                <componentref id="board-down-right-cells"/>
+                <componentref id="boardBase"/>
             </children>
         </component>
 
-        <component id="board">
+        <component id="boardBase">
             <transformation>
-                <transformationref id="rotateBoardRectangle"/>
+            </transformation>
+
+            <materials>
+                <material id="darker_wood"/>
+            </materials>
+
+            <texture id="inherit" />
+
+            <children>
+                <componentref id="boardBaseTop"/>
+                <componentref id="boardBaseBottom"/>
+                <componentref id="boardBaseSideNorth"/>
+                <componentref id="boardBaseSideEast"/>
+                <componentref id="boardBaseSideWest"/>
+                <componentref id="boardBaseSideSouth"/>
+            </children>
+        </component>
+
+        <component id="boardBaseTop">
+            <transformation>
+                <transformationref id="rotateBoardBaseRectangle"/>
+            </transformation>
+
+            <materials>
+                <material id="inherit"/>
+            </materials>
+
+            <texture id="inherit"/>
+
+            <children>
+                <primitiveref id="boardBaseRectangle"/>
+            </children>
+        </component>
+
+        <component id="boardBaseBottom">
+            <transformation>
+                <translate x="0" y="-0.625" z="0" />
+                <rotate axis="x" angle="90" />
+            </transformation>
+
+            <materials>
+                <material id="inherit"/>
+            </materials>
+
+            <texture id="inherit"/>
+
+            <children>
+                <primitiveref id="boardBaseRectangle"/>
+            </children>
+        </component>
+
+        <component id="boardBaseSideNorth">
+            <transformation>
+                <translate x="0" y="-0.125" z="-2.3125"/>
+                <rotate axis="y" angle="180"/>
+            </transformation>
+
+            <materials>
+                <material id="inherit"/>
+            </materials>
+
+            <texture id="inherit"/>
+
+            <children>
+                <primitiveref id="boardSideRectangle"/>
+            </children>
+        </component>
+
+        <component id="boardBaseSideEast">
+            <transformation>
+                <translate x="-2.3125" y="-0.125" z="0"/>
+                <rotate axis="y" angle="-90"/>
+            </transformation>
+
+            <materials>
+                <material id="inherit"/>
+            </materials>
+
+            <texture id="inherit"/>
+
+            <children>
+                <primitiveref id="boardSideRectangle"/>
+            </children>
+        </component>
+
+        <component id="boardBaseSideWest">
+            <transformation>
+                <translate x="2.3125" y="-0.125" z="0"/>
+                <rotate axis="y" angle="90"/>
+            </transformation>
+
+            <materials>
+                <material id="inherit"/>
+            </materials>
+
+            <texture id="inherit"/>
+
+            <children>
+                <primitiveref id="boardSideRectangle"/>
+            </children>
+        </component>
+
+        <component id="boardBaseSideSouth">
+            <transformation>
+                <translate x="0" y="-0.125" z="2.3125"/>
+            </transformation>
+
+            <materials>
+                <material id="inherit"/>
+            </materials>
+
+            <texture id="inherit"/>
+
+            <children>
+                <primitiveref id="boardSideRectangle"/>
+            </children>
+        </component>
+
+        <component id="board-up-left-cells">
+            <transformation>
             </transformation>
 
             <materials>
@@ -312,13 +464,1296 @@
             <texture id="inherit" />
 
             <children>
-                <primitiveref id="boardRectangle"/>
+                <componentref id="cell-1-1-up-left"/>
+                <componentref id="cell-1-2-up-left"/>
+                <componentref id="cell-1-3-up-left"/>
+                <componentref id="cell-1-4-up-left"/>
+                <componentref id="cell-2-1-up-left"/>
+                <componentref id="cell-2-2-up-left"/>
+                <componentref id="cell-2-3-up-left"/>
+                <componentref id="cell-2-4-up-left"/>
+                <componentref id="cell-3-1-up-left"/>
+                <componentref id="cell-3-2-up-left"/>
+                <componentref id="cell-3-3-up-left"/>
+                <componentref id="cell-3-4-up-left"/>
+                <componentref id="cell-4-1-up-left"/>
+                <componentref id="cell-4-2-up-left"/>
+                <componentref id="cell-4-3-up-left"/>
+                <componentref id="cell-4-4-up-left"/>
             </children>
         </component>
+
+        <!--cell-lin-col-board-up-left -->
+        <component id="cell-1-1-up-left">
+            <transformation>
+                <translate x="-1.6875" y="0" z="-1.6875"/>
+            </transformation>
+
+            <materials>
+                <material id="inherit" />
+            </materials>
+
+            <texture id="inherit" />
+
+            <children>
+                <componentref id="cell"/>
+            </children>
+        </component>
+
+        <component id="cell-1-2-up-left">
+            <transformation>
+                <translate x="-0.5625" y="0" z="-1.6875"/>
+            </transformation>
+
+            <materials>
+                <material id="inherit" />
+            </materials>
+
+            <texture id="inherit" />
+
+            <children>
+                <componentref id="cell"/>
+            </children>
+        </component>
+
+        <component id="cell-1-3-up-left">
+            <transformation>
+                <translate x="0.5625" y="0" z="-1.6875"/>
+            </transformation>
+
+            <materials>
+                <material id="inherit" />
+            </materials>
+
+            <texture id="inherit" />
+
+            <children>
+                <componentref id="cell"/>
+            </children>
+        </component>
+
+        <component id="cell-1-4-up-left">
+            <transformation>
+                <translate x="1.6875" y="0" z="-1.6875"/>
+            </transformation>
+
+            <materials>
+                <material id="inherit" />
+            </materials>
+
+            <texture id="inherit" />
+
+            <children>
+                <componentref id="cell"/>
+            </children>
+        </component>
+
+        <component id="cell-2-1-up-left">
+            <transformation>
+                <translate x="-1.6875" y="0" z="-0.5625"/>
+            </transformation>
+
+            <materials>
+                <material id="inherit" />
+            </materials>
+
+            <texture id="inherit" />
+
+            <children>
+                <componentref id="cell"/>
+            </children>
+        </component>
+
+        <component id="cell-2-2-up-left">
+            <transformation>
+                <translate x="-0.5625" y="0" z="-0.5625"/>
+            </transformation>
+
+            <materials>
+                <material id="inherit" />
+            </materials>
+
+            <texture id="inherit" />
+
+            <children>
+                <componentref id="cell"/>
+            </children>
+        </component>
+
+        <component id="cell-2-3-up-left">
+            <transformation>
+                <translate x="0.5625" y="0" z="-0.5625"/>
+            </transformation>
+
+            <materials>
+                <material id="inherit" />
+            </materials>
+
+            <texture id="inherit" />
+
+            <children>
+                <componentref id="cell"/>
+            </children>
+        </component>
+
+        <component id="cell-2-4-up-left">
+            <transformation>
+                <translate x="1.6875" y="0" z="-0.5625"/>
+            </transformation>
+
+            <materials>
+                <material id="inherit" />
+            </materials>
+
+            <texture id="inherit" />
+
+            <children>
+                <componentref id="cell"/>
+            </children>
+        </component>
+
+        <component id="cell-3-1-up-left">
+            <transformation>
+                <translate x="-1.6875" y="0" z="0.5625"/>
+            </transformation>
+
+            <materials>
+                <material id="inherit" />
+            </materials>
+
+            <texture id="inherit" />
+
+            <children>
+                <componentref id="cell"/>
+            </children>
+        </component>
+
+        <component id="cell-3-2-up-left">
+            <transformation>
+                <translate x="-0.5625" y="0" z="0.5625"/>
+            </transformation>
+
+            <materials>
+                <material id="inherit" />
+            </materials>
+
+            <texture id="inherit" />
+
+            <children>
+                <componentref id="cell"/>
+            </children>
+        </component>
+
+        <component id="cell-3-3-up-left">
+            <transformation>
+                <translate x="0.5625" y="0" z="0.5625"/>
+            </transformation>
+
+            <materials>
+                <material id="inherit" />
+            </materials>
+
+            <texture id="inherit" />
+
+            <children>
+                <componentref id="cell"/>
+            </children>
+        </component>
+
+        <component id="cell-3-4-up-left">
+            <transformation>
+                <translate x="1.6875" y="0" z="0.5625"/>
+            </transformation>
+
+            <materials>
+                <material id="inherit" />
+            </materials>
+
+            <texture id="inherit" />
+
+            <children>
+                <componentref id="cell"/>
+            </children>
+        </component>
+
+        <component id="cell-4-1-up-left">
+            <transformation>
+                <translate x="-1.6875" y="0" z="1.6875"/>
+            </transformation>
+
+            <materials>
+                <material id="inherit" />
+            </materials>
+
+            <texture id="inherit" />
+
+            <children>
+                <componentref id="cell"/>
+            </children>
+        </component>
+
+        <component id="cell-4-2-up-left">
+            <transformation>
+                <translate x="-0.5625" y="0" z="1.6875"/>
+            </transformation>
+
+            <materials>
+                <material id="inherit" />
+            </materials>
+
+            <texture id="inherit" />
+
+            <children>
+                <componentref id="cell"/>
+            </children>
+        </component>
+
+        <component id="cell-4-3-up-left">
+            <transformation>
+                <translate x="0.5625" y="0" z="1.6875"/>
+            </transformation>
+
+            <materials>
+                <material id="inherit" />
+            </materials>
+
+            <texture id="inherit" />
+
+            <children>
+                <componentref id="cell"/>
+            </children>
+        </component>
+
+        <component id="cell-4-4-up-left">
+            <transformation>
+                <translate x="1.6875" y="0" z="1.6875"/>
+            </transformation>
+
+            <materials>
+                <material id="inherit" />
+            </materials>
+
+            <texture id="inherit" />
+
+            <children>
+                <componentref id="cell"/>
+            </children>
+        </component>
+
+
+        <component id="board-down-left-cells">
+            <transformation>
+            </transformation>
+
+            <materials>
+                <material id="inherit"/>
+            </materials>
+
+            <texture id="inherit" />
+
+            <children>
+                <componentref id="cell-1-1-down-left"/>
+                <componentref id="cell-1-2-down-left"/>
+                <componentref id="cell-1-3-down-left"/>
+                <componentref id="cell-1-4-down-left"/>
+                <componentref id="cell-2-1-down-left"/>
+                <componentref id="cell-2-2-down-left"/>
+                <componentref id="cell-2-3-down-left"/>
+                <componentref id="cell-2-4-down-left"/>
+                <componentref id="cell-3-1-down-left"/>
+                <componentref id="cell-3-2-down-left"/>
+                <componentref id="cell-3-3-down-left"/>
+                <componentref id="cell-3-4-down-left"/>
+                <componentref id="cell-4-1-down-left"/>
+                <componentref id="cell-4-2-down-left"/>
+                <componentref id="cell-4-3-down-left"/>
+                <componentref id="cell-4-4-down-left"/>
+            </children>
+        </component>
+
+        <!--cell-lin-col-board-down-left -->
+        <component id="cell-1-1-down-left">
+            <transformation>
+                <translate x="-1.6875" y="0" z="-1.6875"/>
+            </transformation>
+
+            <materials>
+                <material id="inherit" />
+            </materials>
+
+            <texture id="inherit" />
+
+            <children>
+                <componentref id="cell"/>
+            </children>
+        </component>
+
+        <component id="cell-1-2-down-left">
+            <transformation>
+                <translate x="-0.5625" y="0" z="-1.6875"/>
+            </transformation>
+
+            <materials>
+                <material id="inherit" />
+            </materials>
+
+            <texture id="inherit" />
+
+            <children>
+                <componentref id="cell"/>
+            </children>
+        </component>
+
+        <component id="cell-1-3-down-left">
+            <transformation>
+                <translate x="0.5625" y="0" z="-1.6875"/>
+            </transformation>
+
+            <materials>
+                <material id="inherit" />
+            </materials>
+
+            <texture id="inherit" />
+
+            <children>
+                <componentref id="cell"/>
+            </children>
+        </component>
+
+        <component id="cell-1-4-down-left">
+            <transformation>
+                <translate x="1.6875" y="0" z="-1.6875"/>
+            </transformation>
+
+            <materials>
+                <material id="inherit" />
+            </materials>
+
+            <texture id="inherit" />
+
+            <children>
+                <componentref id="cell"/>
+            </children>
+        </component>
+
+        <component id="cell-2-1-down-left">
+            <transformation>
+                <translate x="-1.6875" y="0" z="-0.5625"/>
+            </transformation>
+
+            <materials>
+                <material id="inherit" />
+            </materials>
+
+            <texture id="inherit" />
+
+            <children>
+                <componentref id="cell"/>
+            </children>
+        </component>
+
+        <component id="cell-2-2-down-left">
+            <transformation>
+                <translate x="-0.5625" y="0" z="-0.5625"/>
+            </transformation>
+
+            <materials>
+                <material id="inherit" />
+            </materials>
+
+            <texture id="inherit" />
+
+            <children>
+                <componentref id="cell"/>
+            </children>
+        </component>
+
+        <component id="cell-2-3-down-left">
+            <transformation>
+                <translate x="0.5625" y="0" z="-0.5625"/>
+            </transformation>
+
+            <materials>
+                <material id="inherit" />
+            </materials>
+
+            <texture id="inherit" />
+
+            <children>
+                <componentref id="cell"/>
+            </children>
+        </component>
+
+        <component id="cell-2-4-down-left">
+            <transformation>
+                <translate x="1.6875" y="0" z="-0.5625"/>
+            </transformation>
+
+            <materials>
+                <material id="inherit" />
+            </materials>
+
+            <texture id="inherit" />
+
+            <children>
+                <componentref id="cell"/>
+            </children>
+        </component>
+
+        <component id="cell-3-1-down-left">
+            <transformation>
+                <translate x="-1.6875" y="0" z="0.5625"/>
+            </transformation>
+
+            <materials>
+                <material id="inherit" />
+            </materials>
+
+            <texture id="inherit" />
+
+            <children>
+                <componentref id="cell"/>
+            </children>
+        </component>
+
+        <component id="cell-3-2-down-left">
+            <transformation>
+                <translate x="-0.5625" y="0" z="0.5625"/>
+            </transformation>
+
+            <materials>
+                <material id="inherit" />
+            </materials>
+
+            <texture id="inherit" />
+
+            <children>
+                <componentref id="cell"/>
+            </children>
+        </component>
+
+        <component id="cell-3-3-down-left">
+            <transformation>
+                <translate x="0.5625" y="0" z="0.5625"/>
+            </transformation>
+
+            <materials>
+                <material id="inherit" />
+            </materials>
+
+            <texture id="inherit" />
+
+            <children>
+                <componentref id="cell"/>
+            </children>
+        </component>
+
+        <component id="cell-3-4-down-left">
+            <transformation>
+                <translate x="1.6875" y="0" z="0.5625"/>
+            </transformation>
+
+            <materials>
+                <material id="inherit" />
+            </materials>
+
+            <texture id="inherit" />
+
+            <children>
+                <componentref id="cell"/>
+            </children>
+        </component>
+
+        <component id="cell-4-1-down-left">
+            <transformation>
+                <translate x="-1.6875" y="0" z="1.6875"/>
+            </transformation>
+
+            <materials>
+                <material id="inherit" />
+            </materials>
+
+            <texture id="inherit" />
+
+            <children>
+                <componentref id="cell"/>
+            </children>
+        </component>
+
+        <component id="cell-4-2-down-left">
+            <transformation>
+                <translate x="-0.5625" y="0" z="1.6875"/>
+            </transformation>
+
+            <materials>
+                <material id="inherit" />
+            </materials>
+
+            <texture id="inherit" />
+
+            <children>
+                <componentref id="cell"/>
+            </children>
+        </component>
+
+        <component id="cell-4-3-down-left">
+            <transformation>
+                <translate x="0.5625" y="0" z="1.6875"/>
+            </transformation>
+
+            <materials>
+                <material id="inherit" />
+            </materials>
+
+            <texture id="inherit" />
+
+            <children>
+                <componentref id="cell"/>
+            </children>
+        </component>
+
+        <component id="cell-4-4-down-left">
+            <transformation>
+                <translate x="1.6875" y="0" z="1.6875"/>
+            </transformation>
+
+            <materials>
+                <material id="inherit" />
+            </materials>
+
+            <texture id="inherit" />
+
+            <children>
+                <componentref id="cell"/>
+            </children>
+        </component>
+
+
+        <component id="board-up-right-cells">
+            <transformation>
+            </transformation>
+
+            <materials>
+                <material id="inherit"/>
+            </materials>
+
+            <texture id="inherit" />
+
+            <children>
+                <componentref id="cell-1-1-up-right"/>
+                <componentref id="cell-1-2-up-right"/>
+                <componentref id="cell-1-3-up-right"/>
+                <componentref id="cell-1-4-up-right"/>
+                <componentref id="cell-2-1-up-right"/>
+                <componentref id="cell-2-2-up-right"/>
+                <componentref id="cell-2-3-up-right"/>
+                <componentref id="cell-2-4-up-right"/>
+                <componentref id="cell-3-1-up-right"/>
+                <componentref id="cell-3-2-up-right"/>
+                <componentref id="cell-3-3-up-right"/>
+                <componentref id="cell-3-4-up-right"/>
+                <componentref id="cell-4-1-up-right"/>
+                <componentref id="cell-4-2-up-right"/>
+                <componentref id="cell-4-3-up-right"/>
+                <componentref id="cell-4-4-up-right"/>
+            </children>
+        </component>
+
+        <!--cell-lin-col-board-up-right -->
+        <component id="cell-1-1-up-right">
+            <transformation>
+                <translate x="-1.6875" y="0" z="-1.6875"/>
+            </transformation>
+
+            <materials>
+                <material id="inherit" />
+            </materials>
+
+            <texture id="inherit" />
+
+            <children>
+                <componentref id="cell"/>
+            </children>
+        </component>
+
+        <component id="cell-1-2-up-right">
+            <transformation>
+                <translate x="-0.5625" y="0" z="-1.6875"/>
+            </transformation>
+
+            <materials>
+                <material id="inherit" />
+            </materials>
+
+            <texture id="inherit" />
+
+            <children>
+                <componentref id="cell"/>
+            </children>
+        </component>
+
+        <component id="cell-1-3-up-right">
+            <transformation>
+                <translate x="0.5625" y="0" z="-1.6875"/>
+            </transformation>
+
+            <materials>
+                <material id="inherit" />
+            </materials>
+
+            <texture id="inherit" />
+
+            <children>
+                <componentref id="cell"/>
+            </children>
+        </component>
+
+        <component id="cell-1-4-up-right">
+            <transformation>
+                <translate x="1.6875" y="0" z="-1.6875"/>
+            </transformation>
+
+            <materials>
+                <material id="inherit" />
+            </materials>
+
+            <texture id="inherit" />
+
+            <children>
+                <componentref id="cell"/>
+            </children>
+        </component>
+
+        <component id="cell-2-1-up-right">
+            <transformation>
+                <translate x="-1.6875" y="0" z="-0.5625"/>
+            </transformation>
+
+            <materials>
+                <material id="inherit" />
+            </materials>
+
+            <texture id="inherit" />
+
+            <children>
+                <componentref id="cell"/>
+            </children>
+        </component>
+
+        <component id="cell-2-2-up-right">
+            <transformation>
+                <translate x="-0.5625" y="0" z="-0.5625"/>
+            </transformation>
+
+            <materials>
+                <material id="inherit" />
+            </materials>
+
+            <texture id="inherit" />
+
+            <children>
+                <componentref id="cell"/>
+            </children>
+        </component>
+
+        <component id="cell-2-3-up-right">
+            <transformation>
+                <translate x="0.5625" y="0" z="-0.5625"/>
+            </transformation>
+
+            <materials>
+                <material id="inherit" />
+            </materials>
+
+            <texture id="inherit" />
+
+            <children>
+                <componentref id="cell"/>
+            </children>
+        </component>
+
+        <component id="cell-2-4-up-right">
+            <transformation>
+                <translate x="1.6875" y="0" z="-0.5625"/>
+            </transformation>
+
+            <materials>
+                <material id="inherit" />
+            </materials>
+
+            <texture id="inherit" />
+
+            <children>
+                <componentref id="cell"/>
+            </children>
+        </component>
+
+        <component id="cell-3-1-up-right">
+            <transformation>
+                <translate x="-1.6875" y="0" z="0.5625"/>
+            </transformation>
+
+            <materials>
+                <material id="inherit" />
+            </materials>
+
+            <texture id="inherit" />
+
+            <children>
+                <componentref id="cell"/>
+            </children>
+        </component>
+
+        <component id="cell-3-2-up-right">
+            <transformation>
+                <translate x="-0.5625" y="0" z="0.5625"/>
+            </transformation>
+
+            <materials>
+                <material id="inherit" />
+            </materials>
+
+            <texture id="inherit" />
+
+            <children>
+                <componentref id="cell"/>
+            </children>
+        </component>
+
+        <component id="cell-3-3-up-right">
+            <transformation>
+                <translate x="0.5625" y="0" z="0.5625"/>
+            </transformation>
+
+            <materials>
+                <material id="inherit" />
+            </materials>
+
+            <texture id="inherit" />
+
+            <children>
+                <componentref id="cell"/>
+            </children>
+        </component>
+
+        <component id="cell-3-4-up-right">
+            <transformation>
+                <translate x="1.6875" y="0" z="0.5625"/>
+            </transformation>
+
+            <materials>
+                <material id="inherit" />
+            </materials>
+
+            <texture id="inherit" />
+
+            <children>
+                <componentref id="cell"/>
+            </children>
+        </component>
+
+        <component id="cell-4-1-up-right">
+            <transformation>
+                <translate x="-1.6875" y="0" z="1.6875"/>
+            </transformation>
+
+            <materials>
+                <material id="inherit" />
+            </materials>
+
+            <texture id="inherit" />
+
+            <children>
+                <componentref id="cell"/>
+            </children>
+        </component>
+
+        <component id="cell-4-2-up-right">
+            <transformation>
+                <translate x="-0.5625" y="0" z="1.6875"/>
+            </transformation>
+
+            <materials>
+                <material id="inherit" />
+            </materials>
+
+            <texture id="inherit" />
+
+            <children>
+                <componentref id="cell"/>
+            </children>
+        </component>
+
+        <component id="cell-4-3-up-right">
+            <transformation>
+                <translate x="0.5625" y="0" z="1.6875"/>
+            </transformation>
+
+            <materials>
+                <material id="inherit" />
+            </materials>
+
+            <texture id="inherit" />
+
+            <children>
+                <componentref id="cell"/>
+            </children>
+        </component>
+
+        <component id="cell-4-4-up-right">
+            <transformation>
+                <translate x="1.6875" y="0" z="1.6875"/>
+            </transformation>
+
+            <materials>
+                <material id="inherit" />
+            </materials>
+
+            <texture id="inherit" />
+
+            <children>
+                <componentref id="cell"/>
+            </children>
+        </component>
+
+
+        <component id="board-down-right-cells">
+            <transformation>
+            </transformation>
+
+            <materials>
+                <material id="inherit"/>
+            </materials>
+
+            <texture id="inherit" />
+
+            <children>
+                <componentref id="cell-1-1-down-right"/>
+                <componentref id="cell-1-2-down-right"/>
+                <componentref id="cell-1-3-down-right"/>
+                <componentref id="cell-1-4-down-right"/>
+                <componentref id="cell-2-1-down-right"/>
+                <componentref id="cell-2-2-down-right"/>
+                <componentref id="cell-2-3-down-right"/>
+                <componentref id="cell-2-4-down-right"/>
+                <componentref id="cell-3-1-down-right"/>
+                <componentref id="cell-3-2-down-right"/>
+                <componentref id="cell-3-3-down-right"/>
+                <componentref id="cell-3-4-down-right"/>
+                <componentref id="cell-4-1-down-right"/>
+                <componentref id="cell-4-2-down-right"/>
+                <componentref id="cell-4-3-down-right"/>
+                <componentref id="cell-4-4-down-right"/>
+            </children>
+        </component>
+
+        <!--cell-lin-col-board-down-right -->
+        <component id="cell-1-1-down-right">
+            <transformation>
+                <translate x="-1.6875" y="0" z="-1.6875"/>
+            </transformation>
+
+            <materials>
+                <material id="inherit" />
+            </materials>
+
+            <texture id="inherit" />
+
+            <children>
+                <componentref id="cell"/>
+            </children>
+        </component>
+
+        <component id="cell-1-2-down-right">
+            <transformation>
+                <translate x="-0.5625" y="0" z="-1.6875"/>
+            </transformation>
+
+            <materials>
+                <material id="inherit" />
+            </materials>
+
+            <texture id="inherit" />
+
+            <children>
+                <componentref id="cell"/>
+            </children>
+        </component>
+
+        <component id="cell-1-3-down-right">
+            <transformation>
+                <translate x="0.5625" y="0" z="-1.6875"/>
+            </transformation>
+
+            <materials>
+                <material id="inherit" />
+            </materials>
+
+            <texture id="inherit" />
+
+            <children>
+                <componentref id="cell"/>
+            </children>
+        </component>
+
+        <component id="cell-1-4-down-right">
+            <transformation>
+                <translate x="1.6875" y="0" z="-1.6875"/>
+            </transformation>
+
+            <materials>
+                <material id="inherit" />
+            </materials>
+
+            <texture id="inherit" />
+
+            <children>
+                <componentref id="cell"/>
+            </children>
+        </component>
+
+        <component id="cell-2-1-down-right">
+            <transformation>
+                <translate x="-1.6875" y="0" z="-0.5625"/>
+            </transformation>
+
+            <materials>
+                <material id="inherit" />
+            </materials>
+
+            <texture id="inherit" />
+
+            <children>
+                <componentref id="cell"/>
+            </children>
+        </component>
+
+        <component id="cell-2-2-down-right">
+            <transformation>
+                <translate x="-0.5625" y="0" z="-0.5625"/>
+            </transformation>
+
+            <materials>
+                <material id="inherit" />
+            </materials>
+
+            <texture id="inherit" />
+
+            <children>
+                <componentref id="cell"/>
+            </children>
+        </component>
+
+        <component id="cell-2-3-down-right">
+            <transformation>
+                <translate x="0.5625" y="0" z="-0.5625"/>
+            </transformation>
+
+            <materials>
+                <material id="inherit" />
+            </materials>
+
+            <texture id="inherit" />
+
+            <children>
+                <componentref id="cell"/>
+            </children>
+        </component>
+
+        <component id="cell-2-4-down-right">
+            <transformation>
+                <translate x="1.6875" y="0" z="-0.5625"/>
+            </transformation>
+
+            <materials>
+                <material id="inherit" />
+            </materials>
+
+            <texture id="inherit" />
+
+            <children>
+                <componentref id="cell"/>
+            </children>
+        </component>
+
+        <component id="cell-3-1-down-right">
+            <transformation>
+                <translate x="-1.6875" y="0" z="0.5625"/>
+            </transformation>
+
+            <materials>
+                <material id="inherit" />
+            </materials>
+
+            <texture id="inherit" />
+
+            <children>
+                <componentref id="cell"/>
+            </children>
+        </component>
+
+        <component id="cell-3-2-down-right">
+            <transformation>
+                <translate x="-0.5625" y="0" z="0.5625"/>
+            </transformation>
+
+            <materials>
+                <material id="inherit" />
+            </materials>
+
+            <texture id="inherit" />
+
+            <children>
+                <componentref id="cell"/>
+            </children>
+        </component>
+
+        <component id="cell-3-3-down-right">
+            <transformation>
+                <translate x="0.5625" y="0" z="0.5625"/>
+            </transformation>
+
+            <materials>
+                <material id="inherit" />
+            </materials>
+
+            <texture id="inherit" />
+
+            <children>
+                <componentref id="cell"/>
+            </children>
+        </component>
+
+        <component id="cell-3-4-down-right">
+            <transformation>
+                <translate x="1.6875" y="0" z="0.5625"/>
+            </transformation>
+
+            <materials>
+                <material id="inherit" />
+            </materials>
+
+            <texture id="inherit" />
+
+            <children>
+                <componentref id="cell"/>
+            </children>
+        </component>
+
+        <component id="cell-4-1-down-right">
+            <transformation>
+                <translate x="-1.6875" y="0" z="1.6875"/>
+            </transformation>
+
+            <materials>
+                <material id="inherit" />
+            </materials>
+
+            <texture id="inherit" />
+
+            <children>
+                <componentref id="cell"/>
+            </children>
+        </component>
+
+        <component id="cell-4-2-down-right">
+            <transformation>
+                <translate x="-0.5625" y="0" z="1.6875"/>
+            </transformation>
+
+            <materials>
+                <material id="inherit" />
+            </materials>
+
+            <texture id="inherit" />
+
+            <children>
+                <componentref id="cell"/>
+            </children>
+        </component>
+
+        <component id="cell-4-3-down-right">
+            <transformation>
+                <translate x="0.5625" y="0" z="1.6875"/>
+            </transformation>
+
+            <materials>
+                <material id="inherit" />
+            </materials>
+
+            <texture id="inherit" />
+
+            <children>
+                <componentref id="cell"/>
+            </children>
+        </component>
+
+        <component id="cell-4-4-down-right">
+            <transformation>
+                <translate x="1.6875" y="0" z="1.6875"/>
+            </transformation>
+
+            <materials>
+                <material id="inherit" />
+            </materials>
+
+            <texture id="inherit" />
+
+            <children>
+                <componentref id="cell"/>
+            </children>
+        </component>
+
+
+        <component id="cell">
+            <transformation>
+                <rotate axis="y" angle="90"/>
+            </transformation>
+
+            <materials>
+                <material id="inherit" />
+            </materials>
+
+            <texture id="inherit" />
+
+            <children>
+                <componentref id="cellTop"/>
+                <componentref id="cellBottom"/>
+                <componentref id="cellNorthSide" />
+                <componentref id="cellSouthSide" />
+                <componentref id="cellWestSide"/>
+                <componentref id="cellEastSide"/>
+            </children>
+        </component>
+
+        <component id="cellTop">
+            <transformation>
+                <translate x="0" y="0.125" z="0" />
+                <rotate axis="x" angle="-90"/>
+            </transformation>
+
+            <materials>
+                <material id="inherit" />
+            </materials>
+
+            <texture id="inherit" />
+
+            <children>
+                <primitiveref id="cellBaseRectangle"/>
+            </children>
+        </component>
+
+        <component id="cellBottom">
+            <transformation>
+                <translate x="0" y="-0.125" z="0" />
+                <rotate axis="x" angle="90"/>
+            </transformation>
+
+            <materials>
+                <material id="inherit" />
+            </materials>
+
+            <texture id="inherit" />
+
+            <children>
+                <primitiveref id="cellBaseRectangle"/>
+            </children>
+        </component>
+
+        <component id="cellNorthSide">
+            <transformation>
+                <translate x="0" y="0" z="-0.5" />
+                <rotate axis="x" angle="180" />
+            </transformation>
+
+            <materials>
+                <material id="inherit" />
+            </materials>
+
+            <texture id="inherit" />
+
+            <children>
+                <primitiveref id="cellSideRectangle"/>
+            </children>
+        </component>
+
+        <component id="cellSouthSide" >
+            <transformation>
+                <translate x="0" y="0" z="0.5" />
+            </transformation>
+
+            <materials>
+                <material id="inherit" />
+            </materials>
+
+            <texture id="inherit" />
+
+            <children>
+                <primitiveref id="cellSideRectangle"/>
+            </children>
+        </component>
+
+        <component id="cellWestSide">
+            <transformation>
+                <translate x="0.5" y="0" z="0" />
+                <rotate axis="y" angle="90" />
+            </transformation>
+
+            <materials>
+                <material id="inherit" />
+            </materials>
+
+            <texture id="inherit" />
+
+            <children>
+                <primitiveref id="cellSideRectangle"/>
+            </children>
+        </component>
+
+        <component id="cellEastSide">
+            <transformation>
+                <translate x="-0.5" y="0" z="0" />
+                <rotate axis="y" angle="-90" />
+            </transformation>
+
+            <materials>
+                <material id="inherit" />
+            </materials>
+
+            <texture id="inherit" />
+
+            <children>
+                <primitiveref id="cellSideRectangle"/>
+            </children>
+        </component>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         <!-- Pieces related Components-->
         <component id="pieces">
             <transformation>
+                <translate x="0" y="0.25" z="0" />
             </transformation>
 
             <materials>
@@ -328,10 +1763,760 @@
             <texture id="none" />
 
             <children>
-                <componentref id=""/>
+                <componentref id="piecesOf-board-up-left"/>
+                <componentref id="piecesOf-board-down-left"/>
+                <componentref id="piecesOf-board-up-right"/>
+                <componentref id="piecesOf-board-down-right"/>
             </children>
         </component>
 
+        <component id="piecesOf-board-up-left">
+            <transformation>
+                <transformationref id="board-up-left"/>
+            </transformation>
+
+            <materials>
+                <material id="inherit"/>
+            </materials>
+
+            <texture id="none"/>
+
+            <children>
+                <componentref id="whitePiecesOf-board-up-left"/>
+                <componentref id="blackPiecesOf-board-up-left"/>
+            </children>
+        </component>
+
+        <component id="whitePiecesOf-board-up-left">
+            <transformation>
+               <transformationref id="whitePieces"/>
+            </transformation>
+
+            <materials>
+                <material id="whitePiece" />
+            </materials>
+
+            <texture id="none"/>
+
+            <children>
+                <componentref id="whitePieceNumber1-Of-board-up-left"/>
+                <componentref id="whitePieceNumber2-Of-board-up-left"/>
+                <componentref id="whitePieceNumber3-Of-board-up-left"/>
+                <componentref id="whitePieceNumber4-Of-board-up-left"/>
+            </children>
+        </component>
+
+
+        <component id="whitePieceNumber1-Of-board-up-left">
+            <transformation>
+                <translate x="-1.6875" y="0" z="1.6875"/>
+            </transformation>
+
+            <materials>
+                <material id="inherit"/>
+            </materials>
+
+            <texture id="none"/>
+
+            <children>
+                <componentref id="piece"/>
+            </children>
+        </component>
+
+        <component id="whitePieceNumber2-Of-board-up-left">
+            <transformation>
+                <translate x="-0.5625" y="0" z="1.6875"/>
+            </transformation>
+
+            <materials>
+                <material id="inherit"/>
+            </materials>
+
+            <texture id="none"/>
+
+            <children>
+                <componentref id="piece"/>
+            </children>
+        </component>
+
+        <component id="whitePieceNumber3-Of-board-up-left">
+            <transformation>
+                <translate x="0.5625" y="0" z="1.6875"/>
+            </transformation>
+
+            <materials>
+                <material id="inherit"/>
+            </materials>
+
+            <texture id="none"/>
+
+            <children>
+                <componentref id="piece"/>
+            </children>
+        </component>
+
+        <component id="whitePieceNumber4-Of-board-up-left">
+            <transformation>
+                <translate x="1.6875" y="0" z="1.6875"/>
+            </transformation>
+
+            <materials>
+                <material id="inherit"/>
+            </materials>
+
+            <texture id="none"/>
+
+            <children>
+                <componentref id="piece"/>
+            </children>
+        </component>
+
+        <component id="blackPiecesOf-board-up-left">
+            <transformation>
+            </transformation>
+
+            <materials>
+                <material id="blackPiece" />
+            </materials>
+
+            <texture id="none"/>
+
+            <children>
+                <componentref id="blackPieceNumber1-Of-board-up-left"/>
+                <componentref id="blackPieceNumber2-Of-board-up-left"/>
+                <componentref id="blackPieceNumber3-Of-board-up-left"/>
+                <componentref id="blackPieceNumber4-Of-board-up-left"/>
+            </children>
+        </component>
+
+        <component id="blackPieceNumber1-Of-board-up-left">
+            <transformation>
+                <translate x="-1.6875" y="0" z="1.6875"/>
+            </transformation>
+
+            <materials>
+                <material id="inherit"/>
+            </materials>
+
+            <texture id="none"/>
+
+            <children>
+                <componentref id="piece"/>
+            </children>
+        </component>
+
+        <component id="blackPieceNumber2-Of-board-up-left">
+            <transformation>
+                <translate x="-0.5625" y="0" z="1.6875"/>
+            </transformation>
+
+            <materials>
+                <material id="inherit"/>
+            </materials>
+
+            <texture id="none"/>
+
+            <children>
+                <componentref id="piece"/>
+            </children>
+        </component>
+
+        <component id="blackPieceNumber3-Of-board-up-left">
+            <transformation>
+                <translate x="0.5625" y="0" z="1.6875"/>
+            </transformation>
+
+            <materials>
+                <material id="inherit"/>
+            </materials>
+
+            <texture id="none"/>
+
+            <children>
+                <componentref id="piece"/>
+            </children>
+        </component>
+
+        <component id="blackPieceNumber4-Of-board-up-left">
+            <transformation>
+                <translate x="1.6875" y="0" z="1.6875"/>
+            </transformation>
+
+            <materials>
+                <material id="inherit"/>
+            </materials>
+
+            <texture id="none"/>
+
+            <children>
+                <componentref id="piece"/>
+            </children>
+        </component>
+
+
+        <component id="piecesOf-board-down-left">
+            <transformation>
+                <transformationref id="board-down-left"/>
+            </transformation>
+
+            <materials>
+                <material id="inherit"/>
+            </materials>
+
+            <texture id="none"/>
+
+            <children>
+                <componentref id="whitePiecesOf-board-down-left"/>
+                <componentref id="blackPiecesOf-board-down-left"/>
+            </children>
+        </component>
+
+        <component id="whitePiecesOf-board-down-left">
+            <transformation>
+                <transformationref id="whitePieces"/>
+            </transformation>
+
+            <materials>
+                <material id="whitePiece" />
+            </materials>
+
+            <texture id="none"/>
+
+            <children>
+                <componentref id="whitePieceNumber1-Of-board-down-left"/>
+                <componentref id="whitePieceNumber2-Of-board-down-left"/>
+                <componentref id="whitePieceNumber3-Of-board-down-left"/>
+                <componentref id="whitePieceNumber4-Of-board-down-left"/>
+            </children>
+        </component>
+
+        <component id="whitePieceNumber1-Of-board-down-left">
+            <transformation>
+                <translate x="-1.6875" y="0" z="1.6875"/>
+            </transformation>
+
+            <materials>
+                <material id="inherit"/>
+            </materials>
+
+            <texture id="none"/>
+
+            <children>
+                <componentref id="piece"/>
+            </children>
+        </component>
+
+        <component id="whitePieceNumber2-Of-board-down-left">
+            <transformation>
+                <translate x="-0.5625" y="0" z="1.6875"/>
+            </transformation>
+
+            <materials>
+                <material id="inherit"/>
+            </materials>
+
+            <texture id="none"/>
+
+            <children>
+                <componentref id="piece"/>
+            </children>
+        </component>
+
+        <component id="whitePieceNumber3-Of-board-down-left">
+            <transformation>
+                <translate x="0.5625" y="0" z="1.6875"/>
+            </transformation>
+
+            <materials>
+                <material id="inherit"/>
+            </materials>
+
+            <texture id="none"/>
+
+            <children>
+                <componentref id="piece"/>
+            </children>
+        </component>
+
+        <component id="whitePieceNumber4-Of-board-down-left">
+            <transformation>
+                <translate x="1.6875" y="0" z="1.6875"/>
+            </transformation>
+
+            <materials>
+                <material id="inherit"/>
+            </materials>
+
+            <texture id="none"/>
+
+            <children>
+                <componentref id="piece"/>
+            </children>
+        </component>
+
+        <component id="blackPiecesOf-board-down-left">
+            <transformation>
+            </transformation>
+
+            <materials>
+                <material id="blackPiece" />
+            </materials>
+
+            <texture id="none"/>
+
+            <children>
+                <componentref id="blackPieceNumber1-Of-board-down-left"/>
+                <componentref id="blackPieceNumber2-Of-board-down-left"/>
+                <componentref id="blackPieceNumber3-Of-board-down-left"/>
+                <componentref id="blackPieceNumber4-Of-board-down-left"/>
+            </children>
+        </component>
+
+        <component id="blackPieceNumber1-Of-board-down-left">
+            <transformation>
+                <translate x="-1.6875" y="0" z="1.6875"/>
+            </transformation>
+
+            <materials>
+                <material id="inherit"/>
+            </materials>
+
+            <texture id="none"/>
+
+            <children>
+                <componentref id="piece"/>
+            </children>
+        </component>
+
+        <component id="blackPieceNumber2-Of-board-down-left">
+            <transformation>
+                <translate x="-0.5625" y="0" z="1.6875"/>
+            </transformation>
+
+            <materials>
+                <material id="inherit"/>
+            </materials>
+
+            <texture id="none"/>
+
+            <children>
+                <componentref id="piece"/>
+            </children>
+        </component>
+
+        <component id="blackPieceNumber3-Of-board-down-left">
+            <transformation>
+                <translate x="0.5625" y="0" z="1.6875"/>
+            </transformation>
+
+            <materials>
+                <material id="inherit"/>
+            </materials>
+
+            <texture id="none"/>
+
+            <children>
+                <componentref id="piece"/>
+            </children>
+        </component>
+
+        <component id="blackPieceNumber4-Of-board-down-left">
+            <transformation>
+                <translate x="1.6875" y="0" z="1.6875"/>
+            </transformation>
+
+            <materials>
+                <material id="inherit"/>
+            </materials>
+
+            <texture id="none"/>
+
+            <children>
+                <componentref id="piece"/>
+            </children>
+        </component>
+
+        <component id="piecesOf-board-up-right">
+            <transformation>
+                <transformationref id="board-up-right"/>
+            </transformation>
+
+            <materials>
+                <material id="inherit"/>
+            </materials>
+
+            <texture id="none"/>
+
+            <children>
+                <componentref id="whitePiecesOf-board-up-right"/>
+                <componentref id="blackPiecesOf-board-up-right"/>
+            </children>
+        </component>
+
+        <component id="whitePiecesOf-board-up-right">
+            <transformation>
+                <transformationref id="whitePieces"/>
+            </transformation>
+
+            <materials>
+                <material id="whitePiece" />
+            </materials>
+
+            <texture id="none"/>
+
+            <children>
+                <componentref id="whitePieceNumber1-Of-board-up-right"/>
+                <componentref id="whitePieceNumber2-Of-board-up-right"/>
+                <componentref id="whitePieceNumber3-Of-board-up-right"/>
+                <componentref id="whitePieceNumber4-Of-board-up-right"/>
+            </children>
+        </component>
+
+
+        <component id="whitePieceNumber1-Of-board-up-right">
+            <transformation>
+                <translate x="-1.6875" y="0" z="1.6875"/>
+            </transformation>
+
+            <materials>
+                <material id="inherit"/>
+            </materials>
+
+            <texture id="none"/>
+
+            <children>
+                <componentref id="piece"/>
+            </children>
+        </component>
+
+        <component id="whitePieceNumber2-Of-board-up-right">
+            <transformation>
+                <translate x="-0.5625" y="0" z="1.6875"/>
+            </transformation>
+
+            <materials>
+                <material id="inherit"/>
+            </materials>
+
+            <texture id="none"/>
+
+            <children>
+                <componentref id="piece"/>
+            </children>
+        </component>
+
+        <component id="whitePieceNumber3-Of-board-up-right">
+            <transformation>
+                <translate x="0.5625" y="0" z="1.6875"/>
+            </transformation>
+
+            <materials>
+                <material id="inherit"/>
+            </materials>
+
+            <texture id="none"/>
+
+            <children>
+                <componentref id="piece"/>
+            </children>
+        </component>
+
+        <component id="whitePieceNumber4-Of-board-up-right">
+            <transformation>
+                <translate x="1.6875" y="0" z="1.6875"/>
+            </transformation>
+
+            <materials>
+                <material id="inherit"/>
+            </materials>
+
+            <texture id="none"/>
+
+            <children>
+                <componentref id="piece"/>
+            </children>
+        </component>
+
+        <component id="blackPiecesOf-board-up-right">
+            <transformation>
+            </transformation>
+
+            <materials>
+                <material id="blackPiece" />
+            </materials>
+
+            <texture id="none"/>
+
+            <children>
+                <componentref id="blackPieceNumber1-Of-board-up-right"/>
+                <componentref id="blackPieceNumber2-Of-board-up-right"/>
+                <componentref id="blackPieceNumber3-Of-board-up-right"/>
+                <componentref id="blackPieceNumber4-Of-board-up-right"/>
+            </children>
+        </component>
+
+        <component id="blackPieceNumber1-Of-board-up-right">
+            <transformation>
+                <translate x="-1.6875" y="0" z="1.6875"/>
+            </transformation>
+
+            <materials>
+                <material id="inherit"/>
+            </materials>
+
+            <texture id="none"/>
+
+            <children>
+                <componentref id="piece"/>
+            </children>
+        </component>
+
+        <component id="blackPieceNumber2-Of-board-up-right">
+            <transformation>
+                <translate x="-0.5625" y="0" z="1.6875"/>
+            </transformation>
+
+            <materials>
+                <material id="inherit"/>
+            </materials>
+
+            <texture id="none"/>
+
+            <children>
+                <componentref id="piece"/>
+            </children>
+        </component>
+
+        <component id="blackPieceNumber3-Of-board-up-right">
+            <transformation>
+                <translate x="0.5625" y="0" z="1.6875"/>
+            </transformation>
+
+            <materials>
+                <material id="inherit"/>
+            </materials>
+
+            <texture id="none"/>
+
+            <children>
+                <componentref id="piece"/>
+            </children>
+        </component>
+
+        <component id="blackPieceNumber4-Of-board-up-right">
+            <transformation>
+                <translate x="1.6875" y="0" z="1.6875"/>
+            </transformation>
+
+            <materials>
+                <material id="inherit"/>
+            </materials>
+
+            <texture id="none"/>
+
+            <children>
+                <componentref id="piece"/>
+            </children>
+        </component>
+
+        <component id="piecesOf-board-down-right">
+            <transformation>
+                <transformationref id="board-down-right"/>
+            </transformation>
+
+            <materials>
+                <material id="inherit"/>
+            </materials>
+
+            <texture id="none"/>
+
+            <children>
+                <componentref id="whitePiecesOf-board-down-right"/>
+                <componentref id="blackPiecesOf-board-down-right"/>
+            </children>
+        </component>
+
+        <component id="whitePiecesOf-board-down-right">
+            <transformation>
+                <transformationref id="whitePieces"/>
+            </transformation>
+
+            <materials>
+                <material id="whitePiece" />
+            </materials>
+
+            <texture id="none"/>
+
+            <children>
+                <componentref id="whitePieceNumber1-Of-board-down-right"/>
+                <componentref id="whitePieceNumber2-Of-board-down-right"/>
+                <componentref id="whitePieceNumber3-Of-board-down-right"/>
+                <componentref id="whitePieceNumber4-Of-board-down-right"/>
+            </children>
+        </component>
+
+
+        <component id="whitePieceNumber1-Of-board-down-right">
+            <transformation>
+                <translate x="-1.6875" y="0" z="1.6875"/>
+            </transformation>
+
+            <materials>
+                <material id="inherit"/>
+            </materials>
+
+            <texture id="none"/>
+
+            <children>
+                <componentref id="piece"/>
+            </children>
+        </component>
+
+        <component id="whitePieceNumber2-Of-board-down-right">
+            <transformation>
+                <translate x="-0.5625" y="0" z="1.6875"/>
+            </transformation>
+
+            <materials>
+                <material id="inherit"/>
+            </materials>
+
+            <texture id="none"/>
+
+            <children>
+                <componentref id="piece"/>
+            </children>
+        </component>
+
+        <component id="whitePieceNumber3-Of-board-down-right">
+            <transformation>
+                <translate x="0.5625" y="0" z="1.6875"/>
+            </transformation>
+
+            <materials>
+                <material id="inherit"/>
+            </materials>
+
+            <texture id="none"/>
+
+            <children>
+                <componentref id="piece"/>
+            </children>
+        </component>
+
+        <component id="whitePieceNumber4-Of-board-down-right">
+            <transformation>
+                <translate x="1.6875" y="0" z="1.6875"/>
+            </transformation>
+
+            <materials>
+                <material id="inherit"/>
+            </materials>
+
+            <texture id="none"/>
+
+            <children>
+                <componentref id="piece"/>
+            </children>
+        </component>
+
+        <component id="blackPiecesOf-board-down-right">
+            <transformation>
+            </transformation>
+
+            <materials>
+                <material id="blackPiece" />
+            </materials>
+
+            <texture id="none"/>
+
+            <children>
+                <componentref id="blackPieceNumber1-Of-board-down-right"/>
+                <componentref id="blackPieceNumber2-Of-board-down-right"/>
+                <componentref id="blackPieceNumber3-Of-board-down-right"/>
+                <componentref id="blackPieceNumber4-Of-board-down-right"/>
+            </children>
+        </component>
+
+        <component id="blackPieceNumber1-Of-board-down-right">
+            <transformation>
+                <translate x="-1.6875" y="0" z="1.6875"/>
+            </transformation>
+
+            <materials>
+                <material id="inherit"/>
+            </materials>
+
+            <texture id="none"/>
+
+            <children>
+                <componentref id="piece"/>
+            </children>
+        </component>
+
+        <component id="blackPieceNumber2-Of-board-down-right">
+            <transformation>
+                <translate x="-0.5625" y="0" z="1.6875"/>
+            </transformation>
+
+            <materials>
+                <material id="inherit"/>
+            </materials>
+
+            <texture id="none"/>
+
+            <children>
+                <componentref id="piece"/>
+            </children>
+        </component>
+
+        <component id="blackPieceNumber3-Of-board-down-right">
+            <transformation>
+                <translate x="0.5625" y="0" z="1.6875"/>
+            </transformation>
+
+            <materials>
+                <material id="inherit"/>
+            </materials>
+
+            <texture id="none"/>
+
+            <children>
+                <componentref id="piece"/>
+            </children>
+        </component>
+
+        <component id="blackPieceNumber4-Of-board-down-right">
+            <transformation>
+                <translate x="1.6875" y="0" z="1.6875"/>
+            </transformation>
+
+            <materials>
+                <material id="inherit"/>
+            </materials>
+
+            <texture id="none"/>
+
+            <children>
+                <componentref id="piece"/>
+            </children>
+        </component>
+
+        <component id="piece">
+            <transformation>
+                <scale x="0.45" y="0.25" z="0.45"/>
+            </transformation>
+
+            <materials>
+                <material id="inherit"/>
+            </materials>
+
+            <texture id="none" />
+
+            <children>
+                <primitiveref id="pieceAndRopeSphere"/>
+            </children>
+        </component>
 
     </components>
 </lxs>
