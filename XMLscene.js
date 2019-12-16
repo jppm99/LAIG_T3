@@ -166,24 +166,26 @@ class XMLscene extends CGFscene {
                     this.RTTcam = new CGFcamera(view[3] * DEGREE_TO_RAD, view[1], view[2], view[4], view[5]);
                 else if (smooth == true) {
                     let animDuration = 1; // camera transition duration in seconds
-                    let fps = 30;
+                    let fps = 20;
                     let frames = animDuration * fps;
 
                     let currTarget = [this.NormalCam.target[0], this.NormalCam.target[1], this.NormalCam.target[2]];
-                    console.log("1st target: " + currTarget);
+                    let currPos = [this.NormalCam.position[0], this.NormalCam.position[1], this.NormalCam.position[2]];
 
                     for (let i = 0 ; i < frames ; i++) {
                         let step = [(view[4][0] - this.NormalCam.position[0]) / (frames-i), (view[4][1] - this.NormalCam.position[1]) / (frames-i), (view[4][2] - this.NormalCam.position[2]) / (frames-i)];
-                        console.log("Movement step: " + step);
 
                         let targetSteps = [(view[5][0] - this.NormalCam.target[0]) / (frames-i), (view[5][1] - this.NormalCam.target[1]) / (frames-i), (view[5][2] - this.NormalCam.target[2]) / (frames-i)];
-                        console.log("Target step: " + targetSteps);
 
                         currTarget[0] += targetSteps[0];
                         currTarget[1] += targetSteps[1];
                         currTarget[2] += targetSteps[2];
 
-                        this.NormalCam.translate(step);
+                        currPos[0] += step[0];
+                        currPos[1] += step[1];
+                        currPos[2] += step[2];
+
+                        this.NormalCam.setPosition(currPos);
                         this.NormalCam.setTarget(currTarget);
                         await this.sleep(this.SCENE_UPDATE_PERIOD);
                     }
