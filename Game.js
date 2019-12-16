@@ -5,7 +5,32 @@ class Game {
         this.bridge = new Bridge();
 
         this.turn = 0; // even -> black | odd -> white
-        this.board = undefined; //TODO
+        this.board = [
+            [
+                ["white","white","white","white"],
+                ["empty","empty","empty","empty"],
+                ["empty","empty","empty","empty"],
+                ["black","black","black","black"]
+            ],
+            [
+                ["white","white","white","white"],
+                ["empty","empty","empty","empty"],
+                ["empty","empty","empty","empty"],
+                ["black","black","black","black"]
+            ],
+            [
+                ["white","white","white","white"],
+                ["empty","empty","empty","empty"],
+                ["empty","empty","empty","empty"],
+                ["black","black","black","black"]
+            ],
+            [
+                ["white","white","white","white"],
+                ["empty","empty","empty","empty"],
+                ["empty","empty","empty","empty"],
+                ["black","black","black","black"]
+            ]
+        ];
         this.changesList = [];
     }
 
@@ -29,11 +54,11 @@ class Game {
 
     getPlayerColor(player, color) {
         if(this.turn % 2){
-            color = 'white';
+            color = "white";
             player = this.scene.white;
         }
         else{
-            color = 'black';
+            color = "black";
             player = this.scene.black;
         }
     }

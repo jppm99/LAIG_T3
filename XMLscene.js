@@ -136,8 +136,7 @@ class XMLscene extends CGFscene {
         this.selectedView = this.graph.defaultViewID;
         this.rttView = this.graph.defaultViewID;
 
-        this.securityCamera = new MySecurityCamera(this);
-        this.updateCamera(false, true);
+        this.updateCamera(true);
 
         this.scShader = new CGFshader(this.gl, "shaders/sc.vert", "shaders/sc.frag");
 
@@ -152,22 +151,19 @@ class XMLscene extends CGFscene {
         // Kinda TODO
     }
 
-    async updateCamera(rtt, update, smooth){
+    async updateCamera(update, smooth){
         //console.log("*********** Changed View to " + this.selectedView + " ***********");
 
         // uncomment to log current view parameters
         //for(var key in this.graph.views[this.selectedView]) if(this.graph.views[this.selectedView].hasOwnProperty(key)) console.log("KEY: " + key + " -- VALUE: " + this.graph.views[this.selectedView][key]);
 
         if(update) {
-            let view = this.graph.views[(rtt ? this.rttView : this.selectedView)];
+            let view = this.graph.views[this.selectedView];
 
             if (view[0] == 'perspective')
-                if(rtt)
-                    this.RTTcam = new CGFcamera(view[3] * DEGREE_TO_RAD, view[1], view[2], view[4], view[5]);
-                else if (smooth == true) {
-                    let animDuration = 1; // camera transition duration in seconds
-                    let fps = 20;
-                    let frames = animDuration * fps;
+                if (smooth == true) {
+                    let animDuration = 2; // camera transition duration in seconds
+                    let frames = animDuration / (this.SCENE_UPDATE_PERIOD/1000);
 
                     let currTarget = [this.NormalCam.target[0], this.NormalCam.target[1], this.NormalCam.target[2]];
                     let currPos = [this.NormalCam.position[0], this.NormalCam.position[1], this.NormalCam.position[2]];
@@ -198,21 +194,20 @@ class XMLscene extends CGFscene {
                 }
         }
 
-        if(!rtt) this.gui.setActiveCamera(this.NormalCam);
+        this.gui.setActiveCamera(this.NormalCam);
     }
 
     /**
      * Displays the scene.
      */
-    render(rtt) {
+    render() {
         // ---- BEGIN Background, camera and axis setup
 
         // Clear image and depth buffer everytime we update the scene
         this.gl.viewport(0, 0, this.gl.canvas.width, this.gl.canvas.height);
         this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
 
-        if(rtt) this.camera = this.RTTcam;
-        else this.camera = this.NormalCam;
+        this.camera = this.NormalCam;
         this.gui.setActiveCamera(this.camera);
 
 
@@ -266,15 +261,7 @@ class XMLscene extends CGFscene {
 
         let update;
 
-        // RTT  -> last rtt comparison added for performance reasons
-        if(this.lastRttView === this.rttView) update = false;
-        else {
-            this.lastRttView = this.rttView;
-            update = true;
-        }
-        this.updateCamera(true, true);
-        this.rtt.attachToFrameBuffer();
-        this.render(true);
+       
 
         // NORMAL
         if(this.lastSelectedView === this.selectedView) update = false;
@@ -282,12 +269,11 @@ class XMLscene extends CGFscene {
             this.lastSelectedView = this.selectedView;
             update = true;
         }
-        this.updateCamera(false, update, true);
-        this.rtt.detachFromFrameBuffer();
-        this.render(false);
+        this.updateCamera(true, true);
+        this.render();
 
         // -----
-        this.rtt.bind();
+        /*this.rtt.bind();
 
         this.gl.disable(this.gl.DEPTH_TEST);
         this.setActiveShader(this.scShader);
@@ -295,7 +281,7 @@ class XMLscene extends CGFscene {
         this.scShader.setUniformsValues({time : this.y % 1, height : this.gl.canvas.height, width : this.gl.canvas.width});
         this.securityCamera.display();
         this.setActiveShader(this.defaultShader);
-        this.gl.enable(this.gl.DEPTH_TEST);
+        this.gl.enable(this.gl.DEPTH_TEST);*/
     }
 
     update(currTime) {
