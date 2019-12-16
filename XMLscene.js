@@ -165,9 +165,8 @@ class XMLscene extends CGFscene {
                 if(rtt)
                     this.RTTcam = new CGFcamera(view[3] * DEGREE_TO_RAD, view[1], view[2], view[4], view[5]);
                 else if (smooth == true) {
-                    let animDuration = 1; // camera transition duration in seconds
-                    let fps = 20;
-                    let frames = animDuration * fps;
+                    let animDuration = 2; // camera transition duration in seconds
+                    let frames = animDuration / (this.SCENE_UPDATE_PERIOD/1000);
 
                     let currTarget = [this.NormalCam.target[0], this.NormalCam.target[1], this.NormalCam.target[2]];
                     let currPos = [this.NormalCam.position[0], this.NormalCam.position[1], this.NormalCam.position[2]];
