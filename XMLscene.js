@@ -40,13 +40,10 @@ class XMLscene extends CGFscene {
         this.mCounter = 0;
         this.selectedView = 'defaultCamera';
         this.lastSelectedView = 'defaultCamera';
-        this.rttView = 'defaultCamera';
-        this.lastRttView = 'defaultCamera';
 
         this.black = 'Human';
         this.white = 'Human';
 
-        this.rtt = new CGFtextureRTT(this, 1920, 1080);
         this.y = 0;
     }
 
@@ -131,14 +128,14 @@ class XMLscene extends CGFscene {
         }
 
         this.interface.addViews(this.viewKeys);
-        this.interface.addSCViews(this.viewKeys);
 
         this.selectedView = this.graph.defaultViewID;
-        this.rttView = this.graph.defaultViewID;
+        //this.rttView = this.graph.defaultViewID;
 
-        this.updateCamera(true);
+        //this.securityCamera = new MySecurityCamera(this);
+        this.updateCamera();
 
-        this.scShader = new CGFshader(this.gl, "shaders/sc.vert", "shaders/sc.frag");
+        //this.scShader = new CGFshader(this.gl, "shaders/sc.vert", "shaders/sc.frag");
 
         this.sceneInited = true;
     }
@@ -151,48 +148,47 @@ class XMLscene extends CGFscene {
         // Kinda TODO
     }
 
-    async updateCamera(update, smooth){
+    async updateCamera(smooth){
         //console.log("*********** Changed View to " + this.selectedView + " ***********");
 
         // uncomment to log current view parameters
         //for(var key in this.graph.views[this.selectedView]) if(this.graph.views[this.selectedView].hasOwnProperty(key)) console.log("KEY: " + key + " -- VALUE: " + this.graph.views[this.selectedView][key]);
 
-        if(update) {
-            let view = this.graph.views[this.selectedView];
+        let view = this.graph.views[this.selectedView];
 
-            if (view[0] == 'perspective')
-                if (smooth == true) {
-                    let animDuration = 2; // camera transition duration in seconds
-                    let frames = animDuration / (this.SCENE_UPDATE_PERIOD/1000);
+        if (view[0] == 'perspective')
+            if (smooth == true) {
+                let animDuration = 2; // camera transition duration in seconds
+                let frames = animDuration / (this.SCENE_UPDATE_PERIOD/1000);
 
-                    let currTarget = [this.NormalCam.target[0], this.NormalCam.target[1], this.NormalCam.target[2]];
-                    let currPos = [this.NormalCam.position[0], this.NormalCam.position[1], this.NormalCam.position[2]];
+                let currTarget = [this.NormalCam.target[0], this.NormalCam.target[1], this.NormalCam.target[2]];
+                let currPos = [this.NormalCam.position[0], this.NormalCam.position[1], this.NormalCam.position[2]];
 
-                    for (let i = 0 ; i < frames ; i++) {
-                        let step = [(view[4][0] - this.NormalCam.position[0]) / (frames-i), (view[4][1] - this.NormalCam.position[1]) / (frames-i), (view[4][2] - this.NormalCam.position[2]) / (frames-i)];
+                for (let i = 0 ; i < frames ; i++) {
+                    let step = [(view[4][0] - this.NormalCam.position[0]) / (frames-i), (view[4][1] - this.NormalCam.position[1]) / (frames-i), (view[4][2] - this.NormalCam.position[2]) / (frames-i)];
 
-                        let targetSteps = [(view[5][0] - this.NormalCam.target[0]) / (frames-i), (view[5][1] - this.NormalCam.target[1]) / (frames-i), (view[5][2] - this.NormalCam.target[2]) / (frames-i)];
+                    let targetSteps = [(view[5][0] - this.NormalCam.target[0]) / (frames-i), (view[5][1] - this.NormalCam.target[1]) / (frames-i), (view[5][2] - this.NormalCam.target[2]) / (frames-i)];
 
-                        currTarget[0] += targetSteps[0];
-                        currTarget[1] += targetSteps[1];
-                        currTarget[2] += targetSteps[2];
+                    currTarget[0] += targetSteps[0];
+                    currTarget[1] += targetSteps[1];
+                    currTarget[2] += targetSteps[2];
 
-                        currPos[0] += step[0];
-                        currPos[1] += step[1];
-                        currPos[2] += step[2];
+                    currPos[0] += step[0];
+                    currPos[1] += step[1];
+                    currPos[2] += step[2];
 
-                        this.NormalCam.setPosition(currPos);
-                        this.NormalCam.setTarget(currTarget);
-                        await this.sleep(this.SCENE_UPDATE_PERIOD);
-                    }
-                    this.NormalCam.setPosition(view[4]);
-                    this.NormalCam.setTarget(view[5]);
+                    this.NormalCam.setPosition(currPos);
+                    this.NormalCam.setTarget(currTarget);
+                    await this.sleep(this.SCENE_UPDATE_PERIOD);
                 }
+                this.NormalCam.setPosition(view[4]);
+                this.NormalCam.setTarget(view[5]);
+            }
 
-                else {
-                    this.NormalCam = new CGFcamera(view[3] * DEGREE_TO_RAD, view[1], view[2], view[4], view[5]);
-                }
-        }
+            else {
+                this.NormalCam = new CGFcamera(view[3] * DEGREE_TO_RAD, view[1], view[2], view[4], view[5]);
+            }
+    
 
         this.gui.setActiveCamera(this.NormalCam);
     }
@@ -267,9 +263,8 @@ class XMLscene extends CGFscene {
         if(this.lastSelectedView === this.selectedView) update = false;
         else {
             this.lastSelectedView = this.selectedView;
-            update = true;
+            this.updateCamera(true);
         }
-        this.updateCamera(true, true);
         this.render();
 
         // -----
