@@ -4,6 +4,9 @@ class Game {
 
         this.bridge = new Bridge();
 
+        this.whiteScore = 0;
+        this.blackScore = 0;
+
         this.turn = 0; // even -> black | odd -> white
         this.board = [
             [
@@ -40,15 +43,22 @@ class Game {
         this.getPlayerColor(player, color);
 
 
+        let ret, move;
         if(player == "Human") {
-            this.chooseMoveHuman();
+            movement = this.chooseMoveHuman();
+            ret = this.move(movement, color);
         }
         else{
-            this.chooseMoveComputer(player);
+            ret = this.chooseMoveComputer(player, color);
         }
 
-        this.move();
+        if(ret.length === 0) return;
 
+        ret.sort((a, b) => (a[4] > b[4]) ? 1 : -1);
+
+        this.changesList.push(ret);
+        ret.forEach(this.updateBoard);
+        
         this.turn++;
     }
 
@@ -63,29 +73,71 @@ class Game {
         }
     }
 
+    updateBoard(move) {
+        let XI = move[0],
+            YI = move[1],
+            XF = move[3],
+            YF = move[4];
+
+        let valorInicial = this.boardPos(XI, YI, "empty");
+
+        if(XF < 0 || YF < 0) {
+            if(valorInicial == "black") this.whiteScore++;
+            else if(valorInicial == "white") this.blackScore++;
+        }
+        else
+            this.boardPos(XF, YF, valorInicial);
+    }
+    
+    // coordenadas 1-8
+    boardPos(X, Y, P) {
+        let indice1;
+        if(Y<5) {
+            if(X<5) indice1 = 0;
+            else indice1 = 1;
+        }
+        else {
+            if(X<5) indice1 = 2;
+            else indice1 = 3;
+        }
+
+        let indice2 = (Y-1) % 4;
+
+        let indice3 = (X-1) % 4;
+
+        let temp = this.board[indice1][indice2][indice3];
+        
+        if(P != undefined) {
+            this.board[indice1][indice2][indice3] = P;
+        }
+        
+        return temp;
+    }
+
     chooseMoveHuman() {
         //TODO
     }
 
-    chooseMoveComputer(player) {
+    chooseMoveComputer(player, color) {
+        let diff;
         switch (player) {
             case "Computer1":
-                //choose move diff 1
+                diff = "1";
                 break;
             case "Computer2":
-                //choose move diff 2
+                diff = "2";
                 break;
             case "Computer3":
-                //choose move diff 3
+                diff = "3";
                 break;
             default:
                 break;
         }
-        //TODO
+        return this.bridge.chooseMoveComputer(this.board, color, diff);
     }
 
-    move() {
-        //TODO
+    move(movement, color) {
+        return this.bridge.makeMove(this.board, color, movement[0], movement[1]);
     }
 
     undo() {

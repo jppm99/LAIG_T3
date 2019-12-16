@@ -1,5 +1,6 @@
 :- consult('movement.pl').
 :- consult('utils.pl').
+:- consult('bot.pl').
 :- use_module(library(lists)).
 
 inMove(Board, Team, Move1, Move2, Return) :-
@@ -23,7 +24,12 @@ inMove(Board, Team, Move1, Move2, Return) :-
     ;
         Return = []
     ).
-    
+
+/* computer is 1, 2 or 3 */
+inComputer(Board, Team, Computer, Out) :-
+    choose_move(Board, Computer, Team, X1, Y1, XF1, YF1, X2, Y2, XF2, YF2),
+    move(Board, Team, X1, Y1, XF1, YF1, X2, Y2, XF2, YF2, NB),
+    outMove(Board, NB, Out).
 
 outMove(InitialBoard, FinalBoard, Moves) :-
     compare_board(InitialBoard, FinalBoard, 0, L1),
@@ -117,5 +123,5 @@ compare_board(InitialBoard, FinalBoard, Number, Moves) :-
 
 compare_board(_, _, _, []).
 
-inValidMoves(Board, Pos, Return) :-
-    /* TODO */.
+inValidMoves(Board, Pos, Return).
+    /* TODO */

@@ -158,7 +158,7 @@ class XMLscene extends CGFscene {
 
         if (view[0] == 'perspective')
             if (smooth == true) {
-                let animDuration = 2; // camera transition duration in seconds
+                let animDuration = 1; // camera transition duration in seconds
                 let frames = animDuration / (this.SCENE_UPDATE_PERIOD/1000);
 
                 let currTarget = [this.NormalCam.target[0], this.NormalCam.target[1], this.NormalCam.target[2]];
