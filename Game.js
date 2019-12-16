@@ -43,8 +43,12 @@ class Game {
 
     play() {
         let player, color;
+        let temp = [];
 
-        this.getPlayerColor(player, color);
+        this.getPlayerColor(temp);
+
+        player = temp[0];
+        color = temp[1];
 
 
         let ret, move;
@@ -66,14 +70,14 @@ class Game {
         this.turn++;
     }
 
-    getPlayerColor(player, color) {
+    getPlayerColor(PCArr) {
         if(this.turn % 2){
-            color = "white";
-            player = this.scene.white;
+            PCArr[0] = this.scene.white;
+            PCArr[1] = "white";
         }
         else{
-            color = "black";
-            player = this.scene.black;
+            PCArr[0] = this.scene.black;
+            PCArr[1] = "black";
         }
     }
 
