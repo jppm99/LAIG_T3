@@ -4,11 +4,7 @@ class Game {
 
         this.bridge = new Bridge();
 
-        this.whiteScore = 0;
-        this.blackScore = 0;
-
-        this.turn = 0; // even -> black | odd -> white
-        this.board = [
+        this.initialBoard = [
             [
                 ["white","white","white","white"],
                 ["empty","empty","empty","empty"],
@@ -34,6 +30,14 @@ class Game {
                 ["black","black","black","black"]
             ]
         ];
+
+        this.board = [...this.initialBoard];
+
+        this.whiteScore = 0;
+        this.blackScore = 0;
+
+        this.turn = 0; // even -> black | odd -> white
+
         this.changesList = [];
     }
 
@@ -142,6 +146,12 @@ class Game {
 
     undo() {
         this.changesList.pop();
+
+        this.board = [...this.initialBoard];
+        for(let i = 0; i < this.changesList.length; i++) {
+            this.changesList[i].forEach(this.updateBoard);
+        }
+
         this.turn--;
     }
 
