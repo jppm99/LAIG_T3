@@ -3,10 +3,55 @@
     <scene root="shobuRoot" axis_length="5"/>
 
     <!-- specification of all views -->
-    <views default="defaultCamera">
-        <perspective id="defaultCamera" near="0.1" far="400" angle="40">
-            <from x="30" y="15" z="30" />
-            <to x="0" y="-2" z="0" />
+    <views default="BlackSide">
+        <perspective id="BlackSide" near="0.1" far="400" angle="40">
+            <from x="0.001" y="15" z="10" />
+            <to x="0" y="0" z="0" />
+        </perspective>
+
+        <perspective id="BS-Board-UL" near="0.1" far="400" angle="40">
+            <from x="-2.501" y="10" z="4" />
+            <to x="-2.501" y="0" z="-3" />
+        </perspective>
+
+        <perspective id="BS-Board-DL" near="0.1" far="400" angle="40">
+            <from x="-2.501" y="10" z="10" />
+            <to x="-2.501" y="0" z="3" />
+        </perspective>
+
+        <perspective id="BS-Board-UR" near="0.1" far="400" angle="40">
+            <from x="2.501" y="10" z="4" />
+            <to x="2.501" y="0" z="-3" />
+        </perspective>
+
+        <perspective id="BS-Board-DR" near="0.1" far="400" angle="40">
+            <from x="2.501" y="10" z="10" />
+            <to x="2.501" y="0" z="3" />
+        </perspective>
+
+        <perspective id="WhiteSide" near="0.1" far="400" angle="40">
+            <from x="0" y="15" z="-10" />
+            <to x="0" y="0" z="0" />
+        </perspective>
+
+        <perspective id="WS-Board-UL" near="0.1" far="400" angle="40">
+            <from x="-2.5" y="10" z="-4" />
+            <to x="-2.5" y="0" z="-3" />
+        </perspective>
+
+        <perspective id="WS-Board-DL" near="0.1" far="400" angle="40">
+            <from x="-2.5" y="10" z="-10" />
+            <to x="-2.5" y="0" z="3" />
+        </perspective>
+
+        <perspective id="WS-Board-UR" near="0.1" far="400" angle="40">
+            <from x="2.5" y="10" z="-4" />
+            <to x="2.5" y="0" z="-3" />
+        </perspective>
+
+        <perspective id="WS-Board-DR" near="0.1" far="400" angle="40">
+            <from x="2.5" y="10" z="-10" />
+            <to x="2.5" y="0" z="3" />
         </perspective>
     </views>
 
@@ -1726,28 +1771,6 @@
                 <primitiveref id="cellSideRectangle"/>
             </children>
         </component>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
         <!-- Pieces related Components-->
