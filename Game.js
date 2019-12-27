@@ -124,6 +124,38 @@ class Game {
 
     chooseMoveHuman() {
         //TODO
+        //this.managePick(this.pickMode, this.pickResults);
+        //this.scene.clearPickRegistration();
+    }
+
+    managePick(mode, results) {
+        if (mode == false /* && some other game conditions */) {
+            if (results != null && results.length > 0) { // any results?
+                for (var i=0; i< results.length; i++) {
+                    var obj = pickResults[i][0]; // get object from result
+                    if (obj) { // exists?
+                        var uniqueId = pickResults[i][1] // get id
+                        this.OnObjectSelected(obj, uniqueId);
+                    }
+                }
+                // clear results
+                pickResults.splice(0, pickResults.length);
+            }
+        }
+    }
+
+    onObjectSelected(obj, id) {
+        if(obj instanceof MyPiece){
+            // do something with id knowing it is a piece
+        }
+        else {
+            if(obj instanceof MyTile){
+                // do something with id knowing it is a tile
+            }
+            else {
+                // error ?
+            }
+        }
     }
 
     chooseMoveComputer(player, color) {
@@ -149,6 +181,7 @@ class Game {
     }
 
     undo() {
+        console.log("undo!");
         this.changesList.pop();
 
         this.board = [...this.initialBoard];
@@ -157,6 +190,15 @@ class Game {
         }
 
         this.turn--;
+    }
+
+    movie() {
+        console.log("movie!");
+        this.board = [...this.initialBoard];
+        for(let i = 0; i < this.changesList.length; i++) {
+            this.changesList[i].forEach(this.updateBoard);
+            //add animation
+        }
     }
 
 }

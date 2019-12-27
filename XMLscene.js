@@ -34,6 +34,7 @@ class XMLscene extends CGFscene {
         this.axis = new CGFaxis(this);
 
         this.setUpdatePeriod(this.SCENE_UPDATE_PERIOD);
+        this.setPickEnabled(true);
 
         this.game = new Game(this);
 
@@ -139,10 +140,7 @@ class XMLscene extends CGFscene {
 
         this.sceneInited = true;
     }
-
-    undo() {
-        this.game.undo();
-    }
+    
 
     moveCamera() {
         // Kinda TODO
