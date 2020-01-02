@@ -62,6 +62,15 @@ class XMLscene extends CGFscene {
 
         this.camera_newPos=[];
         this.camera_newTarget=[];
+
+        //Picking
+        //Creating objects for each of the boards cells 4*4 board*4=64
+        this.objects=[];
+        for(let i =0; i < 64; i++){
+            this.objects.push(new CGFplane(this));
+        }
+        this.setPickEnabled(true);
+        this.transparencyShader=new CGFshader(this.gl, "shaders/sc.vert", "shaders/transparency.frag");
     }
 
 
@@ -175,52 +184,33 @@ class XMLscene extends CGFscene {
     }
 
     async updateCamera(smooth){
-        //console.log("*********** Changed View to " + this.selectedView + " ***********");
+        this.NormalCam.setPosition(this.camera_currPos);
+        this.NormalCam.setTarget(this.camera_currTarget);
 
-        // uncomment to log current view parameters
-        //for(var key in this.graph.views[this.selectedView]) if(this.graph.views[this.selectedView].hasOwnProperty(key)) console.log("KEY: " + key + " -- VALUE: " + this.graph.views[this.selectedView][key]);
-
-        let view = this.graph.views[this.selectedView];
-
-        if (view[0] == 'perspective')
-            if (smooth == true) {
-                let animDuration = 1; // camera transition duration in seconds
-                let frames = animDuration / (this.SCENE_UPDATE_PERIOD/1000);
-
-                let currTarget = [this.NormalCam.target[0], this.NormalCam.target[1], this.NormalCam.target[2]];
-                let currPos = [this.NormalCam.position[0], this.NormalCam.position[1], this.NormalCam.position[2]];
-
-                for (let i = 0 ; i < frames ; i++) {
-                    let step = [(view[4][0] - this.NormalCam.position[0]) / (frames-i), (view[4][1] - this.NormalCam.position[1]) / (frames-i), (view[4][2] - this.NormalCam.position[2]) / (frames-i)];
-
-                    let targetSteps = [(view[5][0] - this.NormalCam.target[0]) / (frames-i), (view[5][1] - this.NormalCam.target[1]) / (frames-i), (view[5][2] - this.NormalCam.target[2]) / (frames-i)];
-
-                    currTarget[0] += targetSteps[0];
-                    currTarget[1] += targetSteps[1];
-                    currTarget[2] += targetSteps[2];
-
-                    currPos[0] += step[0];
-                    currPos[1] += step[1];
-                    currPos[2] += step[2];
-
-                    this.NormalCam.setPosition(currPos);
-                    this.NormalCam.setTarget(currTarget);
-                    await this.sleep(this.SCENE_UPDATE_PERIOD);
-                }
-                this.NormalCam.setPosition(view[4]);
-                this.NormalCam.setTarget(view[5]);
-            }
-
-            else {
-                this.NormalCam = new CGFcamera(view[3] * DEGREE_TO_RAD, view[1], view[2], view[4], view[5]);
-            }
         this.gui.setActiveCamera(this.NormalCam);
+    }
+
+    logPicking(){
+        if (this.pickMode == false) {
+            if (this.pickResults != null && this.pickResults.length > 0) {
+                for (var i = 0; i < this.pickResults.length; i++) {
+                    var obj = this.pickResults[i][0];
+                    if (obj) {
+                        var customId = this.pickResults[i][1];
+                        console.log("Picked object: " + obj + ", with pick id " + customId);
+                    }
+                }
+                this.pickResults.splice(0, this.pickResults.length);
+            }
+        }
     }
 
     /**
      * Displays the scene.
      */
     render() {
+        this.logPicking();
+        this.clearPickRegistration();
         // ---- BEGIN Background, camera and axis setup
 
         // Clear image and depth buffer everytime we update the scene
@@ -262,6 +252,92 @@ class XMLscene extends CGFscene {
         // Displays the scene (MySceneGraph function).
         this.graph.displayScene();
 
+        this.popMatrix();
+
+        // draw objects for picking
+        this.setActiveShader(this.transparencyShader);
+
+        //cycle that draws objects in line
+        var initial_x=-1.6875;
+        var initial_z=-1.6875;
+        var position_delta=1.125;
+
+        var board_number=1;
+
+        this.pushMatrix();
+        this.translate(-2.5, 0.5, -3);
+
+        for(var lin=0; lin<4; lin++) {
+            for (var col = 0; col < 4; col++) {
+                this.pushMatrix();
+                this.translate(initial_x + col * position_delta, 0, initial_z + lin * position_delta);
+
+                //Id for pickable objects must be >= 1
+                this.registerForPick(board_number*100+lin*10+col, this.objects[(board_number-1)*16+lin*4+col]);
+                this.objects[i].display();
+
+                this.popMatrix();
+            }
+        }
+        this.popMatrix();
+
+        board_number++;
+
+        this.pushMatrix();
+        this.translate(-2.5, 0.5, 3);
+
+        for(var lin=0; lin<4; lin++) {
+            for (var col = 0; col < 4; col++) {
+                this.pushMatrix();
+                this.translate(initial_x + col * position_delta, 0, initial_z + lin * position_delta);
+
+                //Id for pickable objects must be >= 1
+                this.registerForPick(board_number*100+lin*10+col, this.objects[(board_number-1)*16+lin*4+col]);
+                this.objects[(board_number-1)*16+lin*4+col].display();
+
+                this.popMatrix();
+            }
+        }
+        this.popMatrix();
+
+        board_number++;
+
+        this.pushMatrix();
+        this.translate(2.5, 0.5, 3);
+
+        for(var lin=0; lin<4; lin++) {
+            for (var col = 0; col < 4; col++) {
+                this.pushMatrix();
+                this.translate(initial_x + col * position_delta, 0, initial_z + lin * position_delta);
+
+                //Id for pickable objects must be >= 1
+                this.registerForPick(board_number*100+lin*10+col, this.objects[(board_number-1)*16+lin*4+col]);
+                this.objects[i].display();
+
+                this.popMatrix();
+            }
+        }
+        this.popMatrix();
+
+        board_number++;
+
+        this.pushMatrix();
+        this.translate(2.5, 0.5, -3);
+
+        for(var lin=0; lin<4; lin++) {
+            for (var col = 0; col < 4; col++) {
+                this.pushMatrix();
+                this.translate(initial_x + col * position_delta, 0, initial_z + lin * position_delta);
+
+                //Id for pickable objects must be >= 1
+                this.registerForPick(board_number*100+lin*10+col, this.objects[(board_number-1)*16+lin*4+col]);
+                this.objects[i].display();
+
+                this.popMatrix();
+            }
+        }
+
+        this.setActiveShader(this.defaultShader);
         this.popMatrix();
 
         // ---- END
