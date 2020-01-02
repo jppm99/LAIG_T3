@@ -1,8 +1,16 @@
 class Bridge {
 
-    makeMove(gameState, player, move1, move2) {
-        var sentArray = [];
-        sentArray.push("move", gameState, player, move1, move2);
+    makeMove(gameState, team, move1, move2) {
+        let sentArray = [];
+        sentArray.push("move", gameState, team, move1, move2);
+
+        return makeRequest(sentArray);
+    }
+
+    makeMoveComputer(gameState, team, diff) {
+        let sentArray = [];
+
+        sentArray.push("computer_move", gameState, team, diff);
 
         return makeRequest(sentArray);
     }
