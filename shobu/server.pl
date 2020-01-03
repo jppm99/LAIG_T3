@@ -125,7 +125,7 @@ parse_input(In, Out) :-
 		inValidMoves(Board, Pos, Out)
 	;
 		Out = error
-	)
+	).
 
 
 

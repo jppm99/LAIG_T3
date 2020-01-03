@@ -2,8 +2,10 @@ class Game {
     constructor(scene) {
         this.scene = scene;
 
+        this.gameRunning = true;
+        
         this.bridge = new Bridge();
-
+        
         this.initialBoard = [
             [
                 ["white","white","white","white"],
@@ -30,18 +32,22 @@ class Game {
                 ["black","black","black","black"]
             ]
         ];
-
+        
         this.board = [...this.initialBoard];
-
+        
         this.whiteScore = 0;
         this.blackScore = 0;
-
+        
         this.turn = 0; // even -> black | odd -> white
+        this.pickingState = 0;
 
         this.changesList = [];
     }
 
     play() {
+
+        if(!this.gameRunning) return 1;
+
         let player, color;
         let temp = [];
 
@@ -51,16 +57,26 @@ class Game {
         color = temp[1];
 
 
-        let ret, move;
+        let ret, movement;
         if(player == "Human") {
-            movement = this.chooseMoveHuman();
+            movement = this.chooseMoveHuman(color);
+            
+            if(movement == null) return;
+
+            console.log("move " + movement);
+
             ret = this.move(movement, color);
         }
         else{
-            ret = this.chooseMoveComputer(player, color);
+            ret = this.chooseMoveComputer(player, color); // not sure -> need to check prolog
         }
 
-        if(ret.length === 0) return;
+        console.log(ret);
+
+        if(ret.length === 0) {
+            console.log("Invalid move\n");
+            return;
+        }
 
         ret.sort((a, b) => (a[4] > b[4]) ? 1 : -1);
 
@@ -122,40 +138,51 @@ class Game {
         return temp;
     }
 
-    chooseMoveHuman() {
-        //TODO
-        //this.managePick(this.pickMode, this.pickResults);
-        //this.scene.clearPickRegistration();
-    }
+    chooseMoveHuman(color) {
+        this.scene.logPicking();
+        this.scene.clearPickRegistration();
 
-    managePick(mode, results) {
-        if (mode == false /* && some other game conditions */) {
-            if (results != null && results.length > 0) { // any results?
-                for (var i=0; i< results.length; i++) {
-                    var obj = pickResults[i][0]; // get object from result
-                    if (obj) { // exists?
-                        var uniqueId = pickResults[i][1] // get id
-                        this.OnObjectSelected(obj, uniqueId);
-                    }
+        if(this.scene.pick == undefined) return null;
+
+        let pos = this.scene.pick;
+        let piece = this.board[Math.floor(pos/100 - 1)][Math.floor((pos/10) % 10)][Math.floor(pos%10)]; 
+
+        switch(this.pickingState) {
+            case 0:
+                if(piece != color){
+                    console.log("Invalid Selection\n");
+                    break;
                 }
-                // clear results
-                pickResults.splice(0, pickResults.length);
-            }
+                this.chooseMoveHuman.p1 = pos;
+                this.pickingState++;
+                break;
+            case 1:
+                if(piece == color){
+                    console.log("Invalid Selection\n");
+                    break;
+                }
+                this.chooseMoveHuman.p2 = pos;
+                this.pickingState++;
+                break;
+            case 2:
+                if(piece != color){
+                    console.log("Invalid Selection\n");
+                    break;
+                }
+                this.chooseMoveHuman.p3 = pos;
+                this.pickingState++;
+                break
+            case 3:
+                if(piece == color){
+                    console.log("Invalid Selection\n");
+                    break;
+                }
+                this.chooseMoveHuman.p4 = pos;
+                this.pickingState = 0;
+                return [this.chooseMoveHuman.p1, this.chooseMoveHuman.p2, this.chooseMoveHuman.p3, this.chooseMoveHuman.p4];
         }
-    }
 
-    onObjectSelected(obj, id) {
-        if(obj instanceof MyPiece){
-            // do something with id knowing it is a piece
-        }
-        else {
-            if(obj instanceof MyTile){
-                // do something with id knowing it is a tile
-            }
-            else {
-                // error ?
-            }
-        }
+        return null;
     }
 
     chooseMoveComputer(player, color) {
@@ -177,7 +204,21 @@ class Game {
     }
 
     move(movement, color) {
-        return this.bridge.makeMove(this.board, color, movement[0], movement[1]);
+        let x1, y1, x2, y2, x3, y3, x4, y4;
+
+        x1 = this.decodeCoord(movement[0], "x");
+        y1 = this.decodeCoord(movement[0], "y");
+
+        x2 = this.decodeCoord(movement[1], "x");
+        y2 = this.decodeCoord(movement[1], "y");
+
+        x3 = this.decodeCoord(movement[2], "x");
+        y3 = this.decodeCoord(movement[2], "y");
+
+        x4 = this.decodeCoord(movement[3], "x");
+        y4 = this.decodeCoord(movement[3], "y");
+
+        return this.bridge.makeMove(this.board, color, [x1, y1, x2, y2], [x3, y3, x4, y4]);
     }
 
     undo() {
@@ -198,6 +239,19 @@ class Game {
         for(let i = 0; i < this.changesList.length; i++) {
             this.changesList[i].forEach(this.updateBoard);
             //add animation
+        }
+    }
+
+    decodeCoord(code, axis){
+        let tab = Math.floor(code / 100);
+        let y = Math.floor((code / 10) % 10);
+        let x = Math.floor(code % 10);
+
+        if(axis == "x"){
+            return x + 4 * Math.floor((tab+1) % 2) + 1;
+        }
+        else if(axis == "y"){
+            return y + 4 * (tab > 2) + 1;
         }
     }
 
