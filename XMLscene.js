@@ -69,6 +69,7 @@ class XMLscene extends CGFscene {
         for(let i =0; i < 64; i++){
             this.objects.push(new CGFplane(this));
         }
+        this.pick = undefined;
         this.setPickEnabled(true);
         this.transparencyShader=new CGFshader(this.gl, "shaders/sc.vert", "shaders/transparency.frag");
     }
@@ -177,11 +178,6 @@ class XMLscene extends CGFscene {
 
         this.sceneInited = true;
     }
-    
-
-    moveCamera() {
-        // Kinda TODO
-    }
 
     async updateCamera(smooth){
         this.NormalCam.setPosition(this.camera_currPos);
@@ -196,21 +192,20 @@ class XMLscene extends CGFscene {
                 for (var i = 0; i < this.pickResults.length; i++) {
                     var obj = this.pickResults[i][0];
                     if (obj) {
-                        var customId = this.pickResults[i][1];
-                        console.log("Picked object: " + obj + ", with pick id " + customId);
+                        this.pick = this.pickResults[i][1];
                     }
                 }
                 this.pickResults.splice(0, this.pickResults.length);
             }
+            else this.pick = undefined;
         }
+        console.log("Picked object: " + obj + ", with pick id " + this.pick);
     }
 
     /**
      * Displays the scene.
      */
     render() {
-        this.logPicking();
-        this.clearPickRegistration();
         // ---- BEGIN Background, camera and axis setup
 
         // Clear image and depth buffer everytime we update the scene
@@ -345,7 +340,9 @@ class XMLscene extends CGFscene {
 
     // aka game loop
     display(){
-        //this.game.play();
+        
+        this.game.play();
+
         this._display();
     }
 

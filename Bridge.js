@@ -4,7 +4,7 @@ class Bridge {
         let sentArray = [];
         sentArray.push("move", gameState, team, move1, move2);
 
-        return makeRequest(sentArray);
+        return this.makeRequest(sentArray);
     }
 
     makeMoveComputer(gameState, team, diff) {
@@ -12,7 +12,7 @@ class Bridge {
 
         sentArray.push("computer_move", gameState, team, diff);
 
-        return makeRequest(sentArray);
+        return this.makeRequest(sentArray);
     }
 
 
@@ -34,7 +34,7 @@ class Bridge {
 
     makeRequest(requestString) {
         // Make Request
-        getPrologRequest(requestString, handleReply);
+        this.getPrologRequest(requestString, this.handleReply);
         return this.reply;
     }
 
