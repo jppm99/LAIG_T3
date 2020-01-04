@@ -284,7 +284,7 @@ class XMLscene extends CGFscene {
         board_number++;
 
         this.pushMatrix();
-        this.translate(-2.5, 0.5, 3);
+        this.translate(2.5, 0.5, -3);
 
         for(var lin=0; lin<4; lin++) {
             for (var col = 0; col < 4; col++) {
@@ -303,7 +303,7 @@ class XMLscene extends CGFscene {
         board_number++;
 
         this.pushMatrix();
-        this.translate(2.5, 0.5, 3);
+        this.translate(-2.5, 0.5, 3);
 
         for(var lin=0; lin<4; lin++) {
             for (var col = 0; col < 4; col++) {
@@ -322,7 +322,7 @@ class XMLscene extends CGFscene {
         board_number++;
 
         this.pushMatrix();
-        this.translate(2.5, 0.5, -3);
+        this.translate(2.5, 0.5, 3);
 
         for(var lin=0; lin<4; lin++) {
             for (var col = 0; col < 4; col++) {
