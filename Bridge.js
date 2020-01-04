@@ -1,14 +1,29 @@
 class Bridge {
 
+    parseGameState(gameState) {
+        let str = "";
+
+        for(let tab = 0; tab < 4; tab++) {
+            for(let y = 0; y < 4; y++) {
+                for(let x = 0; x < 4; x++) {
+                    str += gameState[tab][y][x] + "-";
+                }   
+            }
+        }
+
+        return str.substring(0, str.length - 1);
+    }
+
     makeMove(gameState, team, move1, move2) {
         let sentStr = "move(" + gameState + "," + team + "," + move1 + "," + move2 + ")";
+
         console.log("Sent: " + sentStr);
 
         return this.makeRequest(sentStr);
     }
 
     makeMoveComputer(gameState, team, diff) {
-        let sentStr = "computer_move(" + gameState + "," + team + "," + diff + ")";
+        let sentStr = "computer_move(" + this.parseGameState(gameState) + "," + team + "," + diff + ")";
         console.log("Sent: " + sentStr);
 
         return this.makeRequest(sentStr);
@@ -39,6 +54,7 @@ class Bridge {
 
     //Handle the Reply
     handleReply(data) {
+        console.log("data: "+data);
         this.reply = data.target.response;
     }
 }
