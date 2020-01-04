@@ -1,18 +1,17 @@
 class Bridge {
 
     makeMove(gameState, team, move1, move2) {
-        let sentArray = [];
-        sentArray.push("move", gameState, team, move1, move2);
+        let sentStr = "move(" + gameState + "," + team + "," + move1 + "," + move2 + ")";
+        console.log("Sent: " + sentStr);
 
-        return this.makeRequest(sentArray);
+        return this.makeRequest(sentStr);
     }
 
     makeMoveComputer(gameState, team, diff) {
-        let sentArray = [];
+        let sentStr = "computer_move(" + gameState + "," + team + "," + diff + ")";
+        console.log("Sent: " + sentStr);
 
-        sentArray.push("computer_move", gameState, team, diff);
-
-        return this.makeRequest(sentArray);
+        return this.makeRequest(sentStr);
     }
 
 

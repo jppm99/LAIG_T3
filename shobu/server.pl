@@ -103,32 +103,14 @@ print_header_line(_).
 
 % Require your Prolog Files here
 
-parse_input(In, Out) :-
-	nth0(0, In, Action),
+parse_input(move(Board,Team,Move1,Move2), Out) :-
+	inMove(Board, Team, Move1, Move2, Out), !.
 
-	(Action == 'move' ->
-		nth0(1, In, Board),
-		nth0(2, In, Team),
-		nth0(3, In, Move1),
-		nth0(4, In, Move2),
-		inMove(Board, Team, Move1, Move2, Out)
-	;
-	Action == 'computer_move' ->
-		nth0(1, In, Board),
-		nth0(2, In, Team),
-		nth0(3, In, Computer),
-		inComputer(Board, Team, Computer, Out)
-	;
-	Action == 'valid_moves' ->
-		nth0(1, In, Board),
-		nth0(2, In, Pos),
-		inValidMoves(Board, Pos, Out)
-	;
-		Out = error
-	).
+parse_input(computer_move(Board,Team,Computer), Out) :-
+	inComputer(Board, Team, Computer, Out), !.
+
+parse_input(valid_moves(Board,Pos), Out) :-
+	inValidMoves(Board, Pos, Out), !.
 
 
-
-test(_,[],N) :- N =< 0.
-test(A,[A|Bs],N) :- N1 is N-1, test(A,Bs,N1).
 	
