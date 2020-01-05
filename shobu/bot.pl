@@ -1,5 +1,7 @@
+:- use_module(library(random)).
+
 % dumb bot
-choose_move(Board, 1, Color, X1,Y1,FX1,FY1,X2,Y2,FX2,FY2) :-
+choose_move(Board, 1, Color, X1, Y1, FX1, FY1, X2, Y2, FX2, FY2) :-
     valid_moves(Board,Color,FirstPiecesList),
     chooseRandomElement(FirstPiecesList,FirstPiece),
     FirstPiece=[TX1,TY1],
@@ -9,7 +11,6 @@ choose_move(Board, 1, Color, X1,Y1,FX1,FY1,X2,Y2,FX2,FY2) :-
     valid_moves(Board,Color,TX1,TY1,TFX1,TFY1,SecondPiecesList),
 
     length(SecondPiecesList, Len2PList),
-
     (Len2PList > 0 ->
         X1 = TX1,
         Y1 = TY1,
@@ -24,7 +25,7 @@ choose_move(Board, 1, Color, X1,Y1,FX1,FY1,X2,Y2,FX2,FY2) :-
     ).
     
 % smart af bot (greedy algorithm)
-choose_move(Board, 2, Color, IX1,IY1,FFX1,FFY1,IX2,IY2,FFX2,FFY2) :-
+choose_move(Board, 2, Color, IX1, IY1, FFX1, FFY1, IX2, IY2, FFX2, FFY2) :-
     goodMovesList(Board, Color, List),
 
     length(List, NumGoodMoves),
@@ -33,17 +34,17 @@ choose_move(Board, 2, Color, IX1,IY1,FFX1,FFY1,IX2,IY2,FFX2,FFY2) :-
         chooseRandomElement(List, Move),
         Move = [IX1,IY1,FFX1,FFY1,IX2,IY2,FFX2,FFY2]
     ;
-        choose_move(Board, 1, Color, IX1,IY1,FFX1,FFY1,IX2,IY2,FFX2,FFY2)
+        choose_move(Board, 1, Color, IX1, IY1, FFX1, FFY1, IX2, IY2, FFX2, FFY2)
     ).
 
 % shobu's world champ
-choose_move(Board, 3, Color, IX1,IY1,FFX1,FFY1,IX2,IY2,FFX2,FFY2) :-
+choose_move(Board, 3, Color, IX1, IY1, FFX1, FFY1, IX2, IY2, FFX2, FFY2) :-
     goodMovesList(Board, Color, GoodList),
 
     length(GoodList, NumGoodMoves),
 
     (NumGoodMoves == 0 ->
-        choose_move(Board, 1, Color, IX1,IY1,FFX1,FFY1,IX2,IY2,FFX2,FFY2)
+        choose_move(Board, 1, Color, IX1, IY1, FFX1, FFY1, IX2, IY2, FFX2, FFY2)
     ;
         (Color == black ->
             Opposition = white
