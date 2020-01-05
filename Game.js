@@ -78,14 +78,17 @@ class Game {
         
         let returnedArray = this.parseStringToArray(ret);
 
-        console.log(returnedArray);
+        console.log("after ret: " + returnedArray);
 
         if(returnedArray.length === 0) {
             console.log("Invalid move\n");
             return;
         }
 
-        returnedArray.sort((a, b) => (a[4] > b[4]) ? 1 : -1);
+        returnedArray.sort((a, b) => {
+            if(a[3] > b[3]) return 1;
+            else return -1;
+        });
 
         console.log(returnedArray);
         
@@ -138,7 +141,7 @@ class Game {
         else
             this.boardPos(XF, YF, valorInicial);
 
-        this.scene.applyVisualChanges(move);
+        //this.scene.applyVisualChanges(move);
     }
     
     // coordenadas 1-8
@@ -157,8 +160,8 @@ class Game {
 
         let indice3 = (X-1) % 4;
 
-        console.log(X + "-" + Y);
-        console.log(indice1 + "-" + indice2 + "-" + indice3);
+        /*console.log(X + "-" + Y);
+        console.log(indice1 + "-" + indice2 + "-" + indice3);*/
         //console.log("board-> " + this.board);
 
         let temp = this.board[indice1][indice2][indice3];
@@ -322,7 +325,7 @@ class Game {
             arr.push(subArr);
         }
 
-        //console.log(arr);
+        //console.log("arr: " + arr);
 
         return arr;
     }
