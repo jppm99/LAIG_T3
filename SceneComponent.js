@@ -30,6 +30,7 @@ class SceneComponent {
         this.length_t=length_t;
 
         this.animation_ref=animation_ref;
+        this.runningAnimatons=[];
     }
 
     display(inherited_material, inherited_texture, inherited_lenght_s, inherited_lenght_t){
@@ -60,6 +61,10 @@ class SceneComponent {
             this.graph.animations[this.animation_ref].apply();
         }
 
+        for(let i=0; i<this.runningAnimatons.length; i++){
+            this.graph.animations[this.runningAnimatons[i]].apply();
+        }
+
         //Apply texture if required or remove it if not
         if(curr_texture!="none"){
             this.graph.materials[curr_material].setTexture(this.graph.textures[curr_texture]);
@@ -80,5 +85,10 @@ class SceneComponent {
         }
 
         this.scene.popMatrix();
+    }
+
+    addRunningAmination(runningAnimationRef){
+        var copiedAnimation = new KeyframeAnimation(this.scene, runningAnimationRef.keyframes);
+        this.runningAnimatons.push(copiedAnimation)
     }
 }

@@ -74,6 +74,34 @@ class XMLscene extends CGFscene {
         this.pick = undefined;
         this.setPickEnabled(true);
         this.transparencyShader=new CGFshader(this.gl, "shaders/sc.vert", "shaders/transparency.frag");
+
+        //AuxiliaryBoard To reach each Piece Id More easily
+        this.pieceIDBoard=[
+            [
+                ["whitePieceNumber1-Of-board-up-left","whitePieceNumber2-Of-board-up-left","whitePieceNumber3-Of-board-up-left","whitePieceNumber4-Of-board-up-left"],
+                ["empty","empty","empty","empty"],
+                ["empty","empty","empty","empty"],
+                ["blackPieceNumber1-Of-board-up-left","blackPieceNumber2-Of-board-up-left","blackPieceNumber3-Of-board-up-left","blackPieceNumber4-Of-board-up-left"]
+            ],
+            [
+                ["whitePieceNumber1-Of-board-up-right","whitePieceNumber2-Of-board-up-right","whitePieceNumber3-Of-board-up-right","whitePieceNumber4-Of-board-up-right"],
+                ["empty","empty","empty","empty"],
+                ["empty","empty","empty","empty"],
+                ["blackPieceNumber1-Of-board-up-right","blackPieceNumber2-Of-board-up-right","blackPieceNumber3-Of-board-up-right","blackPieceNumber4-Of-board-up-right"]
+            ],
+            [
+                ["whitePieceNumber1-Of-board-down-left","whitePieceNumber2-Of-board-down-left","whitePieceNumber3-Of-board-down-left","whitePieceNumber4-Of-board-down-left"],
+                ["empty","empty","empty","empty"],
+                ["empty","empty","empty","empty"],
+                ["blackPieceNumber1-Of-board-down-left","blackPieceNumber2-Of-board-down-left","blackPieceNumber3-Of-board-down-left","blackPieceNumber4-Of-board-down-left"]
+            ],
+            [
+                ["whitePieceNumber1-Of-board-down-right","whitePieceNumber2-Of-board-down-right","whitePieceNumber3-Of-board-down-right","whitePieceNumber4-Of-board-down-right"],
+                ["empty","empty","empty","empty"],
+                ["empty","empty","empty","empty"],
+                ["blackPieceNumber1-Of-board-down-right","blackPieceNumber2-Of-board-down-right","blackPieceNumber3-Of-board-down-right","blackPieceNumber4-Of-board-down-right"]
+            ]
+        ];
     }
 
 
@@ -440,6 +468,121 @@ class XMLscene extends CGFscene {
         this.camera_currTarget[0] = this.camera_targetStep[0]*currDeltaTime+this.camera_oldTarget[0];
         this.camera_currTarget[1] = this.camera_targetStep[1]*currDeltaTime+this.camera_oldTarget[1];
         this.camera_currTarget[2] = this.camera_targetStep[2]*currDeltaTime+this.camera_oldTarget[2];
+    }
+
+    applyVisualChanges(move){
+        let XI = move[0],
+            YI = move[1],
+            XF = move[2],
+            YF = move[3];
+
+        var correspondingIAnimation;
+        var correspondingFAnimation;
+        var moveTwoSpaces=false;
+        if(Math.abs(XF-XI)===2 || Math.abs(YF-YI)===2){
+            moveTwoSpaces=true;
+        }
+        if(XI==XF){
+            if(YF<YI){
+                if(moveTwoSpaces){
+                    correspondingIAnimation = "move-Up-Two";
+                }else {
+                    correspondingIAnimation = "move-Up-One";
+                }
+                correspondingFAnimation = "move-Up-One";
+            }else{
+                if(moveTwoSpaces){
+                    correspondingIAnimation = "move-Down-Two";
+                }else {
+                    correspondingIAnimation = "move-Down-One";
+                }
+                correspondingFAnimation = "move-Down-One";
+            }
+        }else if(YI==YF){
+            if(XF<XI){
+                if(moveTwoSpaces){
+                    correspondingIAnimation = "move-Left-Two";
+                }else {
+                    correspondingIAnimation = "move-Left-One";
+                }
+                correspondingFAnimation = "move-Left-One";
+            }else{
+                if(moveTwoSpaces){
+                    correspondingIAnimation = "move-Right-Two";
+                }else {
+                    correspondingIAnimation = "move-Right-One";
+                }
+                correspondingFAnimation = "move-Right-One";
+            }
+        }else{
+            if(XF<XI && YF<YI){
+                if(moveTwoSpaces){
+                    correspondingIAnimation = "move-Up-Left-Two";
+                }else {
+                    correspondingIAnimation = "move-Up-Left-One";
+                }
+                correspondingFAnimation = "move-Up-Left-One";
+            }else if(XF>XI && YF<YI){
+                if(moveTwoSpaces){
+                    correspondingIAnimation = "move-Up-Right-Two";
+                }else {
+                    correspondingIAnimation = "move-Up-Right-One";
+                }
+                correspondingFAnimation = "move-Up-Right-One";
+            }else if(XF<XI && YF>YI){
+                if(moveTwoSpaces){
+                    correspondingIAnimation = "move-Down-Left-Two";
+                }else {
+                    correspondingIAnimation = "move-Down-Left-One";
+                }
+                correspondingFAnimation = "move-Down-Left-One";
+            }else{
+                if(moveTwoSpaces){
+                    correspondingIAnimation = "move-Down-Right-Two";
+                }else {
+                    correspondingIAnimation = "move-Down-Right-One";
+                }
+                correspondingFAnimation = "move-Down-Right-One";
+            }
+        }
+
+        let valorInicial = this.visualBoardPos(XI, YI, "empty");
+        let valorFinal="undefined";
+
+        if(XF >= 0 && YF >= 0) {
+            valorFinal=this.visualBoardPos(XF, YF, valorInicial);
+        }
+
+        this.graph.components[valorInicial].addRunningAmination(correspondingIAnimation);
+        if(valorFinal!="undefined"){
+            this.graph.components[valorFinal].addRunningAmination(correspondingFAnimation);
+        }
+
+    }
+
+
+    visualBoardPos(X, Y, P) {
+        let indice1;
+        if(Y<5) {
+            if(X<5) indice1 = 0;
+            else indice1 = 1;
+        }
+        else {
+            if(X<5) indice1 = 2;
+            else indice1 = 3;
+        }
+
+        let indice2 = (Y-1) % 4;
+
+        let indice3 = (X-1) % 4;
+
+        let temp = this.pieceIDBoard[indice1][indice2][indice3];
+
+        if(P != undefined) {
+            this.pieceIDBoard[indice1][indice2][indice3] = P;
+        }
+
+        return temp;
     }
 
     sleep(ms) {
