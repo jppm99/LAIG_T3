@@ -1,8 +1,8 @@
+:- use_module(library(lists)).
 :- consult('movement.pl').
 :- consult('utils.pl').
 :- consult('bot.pl').
 :- consult('game_state.pl').
-:- use_module(library(lists)).
 
 inMove(Board, Team, Move1, Move2, Return) :-
     nth0(0, Move1, X1),

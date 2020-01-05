@@ -66,6 +66,7 @@ class Game {
             ret = this.move(movement, color);
         }
         else{
+            this.bridge.timeout(1000);
             ret = this.chooseMoveComputer(player, color); // not sure -> need to check prolog
         }
 
@@ -244,7 +245,7 @@ class Game {
             default:
                 break;
         }
-        return this.bridge.chooseMoveComputer(this.board, color, diff);
+        return this.bridge.makeMoveComputer(this.board, color, diff);
     }
 
     move(movement, color) {
