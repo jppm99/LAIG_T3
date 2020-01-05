@@ -227,64 +227,64 @@
 
         <!--Animations that represent moving just one space-->
         <animation id="move-Up-One">
-            <keyframe instant="1">
-                <translate x="0.0" y="0.0" z="-0.5625" />
+            <keyframe instant="3">
+                <translate x="0.0" y="0.0" z="-1.15" />
                 <rotate angle_x="0.0" angle_y="0.0" angle_z="0.0" />
                 <scale x="1" y="1" z="1" />
             </keyframe>
         </animation>
 
         <animation id="move-Down-One">
-            <keyframe instant="1">
-                <translate x="0.0" y="0.0" z="0.5625" />
+            <keyframe instant="3">
+                <translate x="0.0" y="0.0" z="1.15" />
                 <rotate angle_x="0.0" angle_y="0.0" angle_z="0.0" />
                 <scale x="1" y="1" z="1" />
             </keyframe>
         </animation>
 
         <animation id="move-Right-One">
-            <keyframe instant="1">
-                <translate x="0.5625" y="0.0" z="0.0" />
+            <keyframe instant="3">
+                <translate x="1.15" y="0.0" z="0.0" />
                 <rotate angle_x="0.0" angle_y="0.0" angle_z="0.0" />
                 <scale x="1" y="1" z="1" />
             </keyframe>
         </animation>
 
         <animation id="move-Left-One">
-            <keyframe instant="1">
-                <translate x="-0.5625" y="0.0" z="0.0" />
+            <keyframe instant="3">
+                <translate x="-1.15" y="0.0" z="0.0" />
                 <rotate angle_x="0.0" angle_y="0.0" angle_z="0.0" />
                 <scale x="1" y="1" z="1" />
             </keyframe>
         </animation>
 
         <animation id="move-Up-Left-One">
-            <keyframe instant="1">
-                <translate x="-0.5625" y="0.0" z="-0.5625" />
+            <keyframe instant="3">
+                <translate x="-1.15" y="0.0" z="-1.15" />
                 <rotate angle_x="0.0" angle_y="0.0" angle_z="0.0" />
                 <scale x="1" y="1" z="1" />
             </keyframe>
         </animation>
 
         <animation id="move-Up-Right-One">
-            <keyframe instant="1">
-                <translate x="0.5625" y="0.0" z="-0.5625" />
+            <keyframe instant="3">
+                <translate x="1.15" y="0.0" z="-1.15" />
                 <rotate angle_x="0.0" angle_y="0.0" angle_z="0.0" />
                 <scale x="1" y="1" z="1" />
             </keyframe>
         </animation>
 
         <animation id="move-Down-Left-One">
-            <keyframe instant="1">
-                <translate x="-0.5625" y="0.0" z="-0.5625" />
+            <keyframe instant="3">
+                <translate x="-1.15" y="0.0" z="-1.15" />
                 <rotate angle_x="0.0" angle_y="0.0" angle_z="0.0" />
                 <scale x="1" y="1" z="1" />
             </keyframe>
         </animation>
 
         <animation id="move-Down-Right-One">
-            <keyframe instant="1">
-                <translate x="0.5625" y="0.0" z="-0.5625" />
+            <keyframe instant="3">
+                <translate x="1.15" y="0.0" z="-1.15" />
                 <rotate angle_x="0.0" angle_y="0.0" angle_z="0.0" />
                 <scale x="1" y="1" z="1" />
             </keyframe>
@@ -293,64 +293,64 @@
 
         <!--Animations that represent moving two space-->
         <animation id="move-Up-Two">
-            <keyframe instant="1">
-                <translate x="0.0" y="0.0" z="-1.6875" />
+            <keyframe instant="3">
+                <translate x="0.0" y="0.0" z="-2.28" />
                 <rotate angle_x="0.0" angle_y="0.0" angle_z="0.0" />
                 <scale x="1" y="1" z="1" />
             </keyframe>
         </animation>
 
         <animation id="move-Down-Two">
-            <keyframe instant="1">
-                <translate x="0.0" y="0.0" z="1.6875" />
+            <keyframe instant="3">
+                <translate x="0.0" y="0.0" z="2.28‬" />
                 <rotate angle_x="0.0" angle_y="0.0" angle_z="0.0" />
                 <scale x="1" y="1" z="1" />
             </keyframe>
         </animation>
 
         <animation id="move-Right-Two">
-            <keyframe instant="1">
-                <translate x="1.6875" y="0.0" z="0.0" />
+            <keyframe instant="3">
+                <translate x="2.28‬" y="0.0" z="0.0" />
                 <rotate angle_x="0.0" angle_y="0.0" angle_z="0.0" />
                 <scale x="1" y="1" z="1" />
             </keyframe>
         </animation>
 
         <animation id="move-Left-Two">
-            <keyframe instant="1">
-                <translate x="-1.6875" y="0.0" z="0.0" />
+            <keyframe instant="3">
+                <translate x="-2.28‬" y="0.0" z="0.0" />
                 <rotate angle_x="0.0" angle_y="0.0" angle_z="0.0" />
                 <scale x="1" y="1" z="1" />
             </keyframe>
         </animation>
 
         <animation id="move-Up-Left-Two">
-            <keyframe instant="1">
-                <translate x="-1.6875" y="0.0" z="-1.6875" />
+            <keyframe instant="3">
+                <translate x="-2.28‬" y="0.0" z="-2.28‬" />
                 <rotate angle_x="0.0" angle_y="0.0" angle_z="0.0" />
                 <scale x="1" y="1" z="1" />
             </keyframe>
         </animation>
 
         <animation id="move-Up-Right-Two">
-            <keyframe instant="1">
-                <translate x="1.6875" y="0.0" z="-1.6875" />
+            <keyframe instant="3">
+                <translate x="2.28‬" y="0.0" z="-2.28‬" />
                 <rotate angle_x="0.0" angle_y="0.0" angle_z="0.0" />
                 <scale x="1" y="1" z="1" />
             </keyframe>
         </animation>
 
         <animation id="move-Down-Left-Two">
-            <keyframe instant="1">
-                <translate x="-1.6875" y="0.0" z="-1.6875" />
+            <keyframe instant="3">
+                <translate x="-2.28‬" y="0.0" z="-2.28‬" />
                 <rotate angle_x="0.0" angle_y="0.0" angle_z="0.0" />
                 <scale x="1" y="1" z="1" />
             </keyframe>
         </animation>
 
         <animation id="move-Down-Right-Two">
-            <keyframe instant="1">
-                <translate x="1.6875" y="0.0" z="-1.6875" />
+            <keyframe instant="3">
+                <translate x="2.28‬" y="0.0" z="-2.28‬" />
                 <rotate angle_x="0.0" angle_y="0.0" angle_z="0.0" />
                 <scale x="1" y="1" z="1" />
             </keyframe>

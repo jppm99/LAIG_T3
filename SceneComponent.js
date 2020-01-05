@@ -62,7 +62,7 @@ class SceneComponent {
         }
 
         for(let i=0; i<this.runningAnimatons.length; i++){
-            this.graph.animations[this.runningAnimatons[i]].apply();
+            this.runningAnimatons[i].apply();
         }
 
         //Apply texture if required or remove it if not
@@ -87,8 +87,8 @@ class SceneComponent {
         this.scene.popMatrix();
     }
 
-    addRunningAmination(runningAnimationRef){
-        var copiedAnimation = new KeyframeAnimation(this.scene, runningAnimationRef.keyframes);
+    addRunningAnimation(runningAnimationRef){
+        var copiedAnimation = new KeyframeAnimation(this.scene, this.scene.graph.animations[runningAnimationRef].keyframes);
         this.runningAnimatons.push(copiedAnimation)
     }
 }

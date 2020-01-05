@@ -84,10 +84,10 @@ class XMLscene extends CGFscene {
                 ["blackPieceNumber1-Of-board-up-left","blackPieceNumber2-Of-board-up-left","blackPieceNumber3-Of-board-up-left","blackPieceNumber4-Of-board-up-left"]
             ],
             [
-                ["whitePieceNumber1-Of-board-up-right","whitePieceNumber2-Of-board-up-right","whitePieceNumber3-Of-board-up-right","whitePieceNumber4-Of-board-up-right"],
+                ["whitePieceNumber1-Of-board-down-right","whitePieceNumber2-Of-board-down-right","whitePieceNumber3-Of-board-down-right","whitePieceNumber4-Of-board-down-right"],
                 ["empty","empty","empty","empty"],
                 ["empty","empty","empty","empty"],
-                ["blackPieceNumber1-Of-board-up-right","blackPieceNumber2-Of-board-up-right","blackPieceNumber3-Of-board-up-right","blackPieceNumber4-Of-board-up-right"]
+                ["blackPieceNumber1-Of-board-down-right","blackPieceNumber2-Of-board-down-right","blackPieceNumber3-Of-board-down-right","blackPieceNumber4-Of-board-down-right"]
             ],
             [
                 ["whitePieceNumber1-Of-board-down-left","whitePieceNumber2-Of-board-down-left","whitePieceNumber3-Of-board-down-left","whitePieceNumber4-Of-board-down-left"],
@@ -96,10 +96,10 @@ class XMLscene extends CGFscene {
                 ["blackPieceNumber1-Of-board-down-left","blackPieceNumber2-Of-board-down-left","blackPieceNumber3-Of-board-down-left","blackPieceNumber4-Of-board-down-left"]
             ],
             [
-                ["whitePieceNumber1-Of-board-down-right","whitePieceNumber2-Of-board-down-right","whitePieceNumber3-Of-board-down-right","whitePieceNumber4-Of-board-down-right"],
+                ["whitePieceNumber1-Of-board-up-right","whitePieceNumber2-Of-board-up-right","whitePieceNumber3-Of-board-up-right","whitePieceNumber4-Of-board-up-right"],
                 ["empty","empty","empty","empty"],
                 ["empty","empty","empty","empty"],
-                ["blackPieceNumber1-Of-board-down-right","blackPieceNumber2-Of-board-down-right","blackPieceNumber3-Of-board-down-right","blackPieceNumber4-Of-board-down-right"]
+                ["blackPieceNumber1-Of-board-up-right","blackPieceNumber2-Of-board-up-right","blackPieceNumber3-Of-board-up-right","blackPieceNumber4-Of-board-up-right"]
             ]
         ];
     }
@@ -229,7 +229,9 @@ class XMLscene extends CGFscene {
             }
             else this.pick = undefined;
         }
-        console.log("Picked object: " + obj + ", with pick id " + this.pick);
+        if(this.pick!==undefined) {
+            console.log("Picked object: " + obj + ", with pick id " + this.pick);
+        }
     }
 
     /**
@@ -434,6 +436,12 @@ class XMLscene extends CGFscene {
             this.graph.animations[animation].update(this.deltaTime);
         }
 
+        for(var component in this.graph.components){
+            for(var runningAnimation in this.graph.components[component].runningAnimatons){
+                this.graph.components[component].runningAnimatons[runningAnimation].update(this.deltaTime);
+            }
+        }
+
     }
 
     calculateCameraSteps(){
@@ -553,9 +561,12 @@ class XMLscene extends CGFscene {
             valorFinal=this.visualBoardPos(XF, YF, valorInicial);
         }
 
-        this.graph.components[valorInicial].addRunningAmination(correspondingIAnimation);
-        if(valorFinal!="undefined"){
-            this.graph.components[valorFinal].addRunningAmination(correspondingFAnimation);
+        if(valorInicial!=="empty"){
+            this.graph.components[valorInicial].addRunningAnimation(correspondingIAnimation);
+        }
+
+        if(valorFinal!=="undefined" && valorFinal!=="empty"){
+            this.graph.components[valorFinal].addRunningAnimation(correspondingFAnimation);
         }
 
     }
