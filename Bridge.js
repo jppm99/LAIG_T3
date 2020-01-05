@@ -30,7 +30,17 @@ class Bridge {
     }
 
     makeMoveComputer(gameState, team, diff) {
-        let sentStr = "computer_move(" + this.parseGameState(gameState) + "," + team + "," + diff + ")";
+        let sentStr = "computer_move(" + gameState + "," + team + "," + diff + ")";
+        //console.log("Sent: " + sentStr);
+
+        this.makeRequest(sentStr);
+
+        return Bridge.reply;
+    }
+
+    getState(gameState) {
+        let sentStr = "state(" + gameState + ")";
+
         //console.log("Sent: " + sentStr);
 
         this.makeRequest(sentStr);

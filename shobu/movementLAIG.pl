@@ -1,6 +1,7 @@
 :- consult('movement.pl').
 :- consult('utils.pl').
 :- consult('bot.pl').
+:- consult('game_state.pl').
 :- use_module(library(lists)).
 
 inMove(Board, Team, Move1, Move2, Return) :-
@@ -24,6 +25,9 @@ inMove(Board, Team, Move1, Move2, Return) :-
     ;
         Return = []
     ).
+
+inState(Board, Out) :-
+    game_over(Board, Out).
 
 /* computer is 1, 2 or 3 */
 inComputer(Board, Team, Computer, Out) :-
@@ -123,5 +127,5 @@ compare_board(InitialBoard, FinalBoard, Number, Moves) :-
 
 compare_board(_, _, _, []).
 
-inValidMoves(Board, Pos, Return).
+inValidMoves(_Board, _Pos, _Return).
     /* TODO */
