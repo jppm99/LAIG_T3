@@ -73,8 +73,12 @@ class Game {
             console.log("Server return was: " + ret);
             return;
         }
+
+        console.log(ret);
         
         let returnedArray = this.parseStringToArray(ret);
+
+        console.log(returnedArray);
 
         if(returnedArray.length === 0) {
             console.log("Invalid move\n");
@@ -83,6 +87,8 @@ class Game {
 
         returnedArray.sort((a, b) => (a[4] > b[4]) ? 1 : -1);
 
+        console.log(returnedArray);
+        
         this.changesList.push(returnedArray);
 
         for (var key in returnedArray) {
@@ -150,6 +156,10 @@ class Game {
         let indice2 = (Y-1) % 4;
 
         let indice3 = (X-1) % 4;
+
+        console.log(X + "-" + Y);
+        console.log(indice1 + "-" + indice2 + "-" + indice3);
+        //console.log("board-> " + this.board);
 
         let temp = this.board[indice1][indice2][indice3];
         
@@ -292,16 +302,23 @@ class Game {
 
         let numInnerArrays = Math.round((str.length-1) / 10);
 
+        let offset = 0; // negative numbers have a extra char '-'
+
         for(let i = 0; i < numInnerArrays; i++) {
             let subArr = [];
 
             let pos = 10 * i + 2;
 
-            subArr.push(str.charAt(pos));
-            subArr.push(str.charAt(pos+2));
-            subArr.push(str.charAt(pos+4));
-            subArr.push(str.charAt(pos+6));
-
+            for(let a = 0; a < 4; a++){
+                let char = str.charAt(pos + offset + a * 2);
+                if(char == '-'){
+                    char = str.charAt(pos + ++offset + a * 2);
+                    subArr.push(char * -1);
+                }
+                else{
+                    subArr.push(char * 1);
+                }
+            }
             arr.push(subArr);
         }
 
