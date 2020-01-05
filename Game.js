@@ -141,7 +141,7 @@ class Game {
         else
             this.boardPos(XF, YF, valorInicial);
 
-        //this.scene.applyVisualChanges(move);
+        this.scene.applyVisualChanges(move);
     }
     
     // coordenadas 1-8
