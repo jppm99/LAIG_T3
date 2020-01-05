@@ -6,34 +6,7 @@ class Game {
         
         this.bridge = new Bridge();
         
-        this.initialBoard = [
-            [
-                ["white","white","white","white"],
-                ["empty","empty","empty","empty"],
-                ["empty","empty","empty","empty"],
-                ["black","black","black","black"]
-            ],
-            [
-                ["white","white","white","white"],
-                ["empty","empty","empty","empty"],
-                ["empty","empty","empty","empty"],
-                ["black","black","black","black"]
-            ],
-            [
-                ["white","white","white","white"],
-                ["empty","empty","empty","empty"],
-                ["empty","empty","empty","empty"],
-                ["black","black","black","black"]
-            ],
-            [
-                ["white","white","white","white"],
-                ["empty","empty","empty","empty"],
-                ["empty","empty","empty","empty"],
-                ["black","black","black","black"]
-            ]
-        ];
-        
-        this.board = [...this.initialBoard];
+        this.clearBoard();
         
         this.whiteScore = 0;
         this.blackScore = 0;
@@ -56,7 +29,6 @@ class Game {
         player = temp[0];
         color = temp[1];
 
-
         let ret, movement;
         if(player == "Human") {
             movement = this.chooseMoveHuman(color);
@@ -67,7 +39,7 @@ class Game {
         }
         else{
             this.bridge.timeout(1000);
-            ret = this.chooseMoveComputer(player, color); // not sure -> need to check prolog
+            ret = this.chooseMoveComputer(player, color);
         }
 
         if(ret == null) {
@@ -75,11 +47,11 @@ class Game {
             return;
         }
 
-        console.log(ret);
+        //console.log(ret);
         
         let returnedArray = this.parseStringToArray(ret);
 
-        console.log("after ret: " + returnedArray);
+        //console.log("after ret: " + returnedArray);
 
         if(returnedArray.length === 0) {
             console.log("Invalid move\n");
@@ -91,7 +63,7 @@ class Game {
             else return -1;
         });
 
-        console.log(returnedArray);
+        //console.log(returnedArray);
         
         this.changesList.push(returnedArray);
 
@@ -114,6 +86,7 @@ class Game {
         }
 
         this.turn++;
+        
     }
 
     getPlayerColor(PCArr) {
@@ -268,9 +241,17 @@ class Game {
 
     undo() {
         console.log("undo!");
+
+        console.log(this.changesList);
+        
+        if(this.changesList.length == 0) return;
+
         this.changesList.pop();
 
-        this.board = [...this.initialBoard];
+        console.log(this.changesList);
+
+        this.clearBoard();
+
         for(let i = 0; i < this.changesList.length; i++) {
             //this.changesList[i].forEach(this.updateBoard);
             for (var key in this.changesList[i]) {
@@ -280,12 +261,17 @@ class Game {
             }
         }
 
+        console.log("New board:");
+        console.log(this.board);
+
         this.turn--;
     }
 
     movie() {
         console.log("movie!");
-        this.board = [...this.initialBoard];
+        
+        this.clearBoard();
+
         for(let i = 0; i < this.changesList.length; i++) {
             //this.changesList[i].forEach(this.updateBoard);
             for (var key in this.changesList[i]) {
@@ -322,7 +308,7 @@ class Game {
 
             let pos = 10 * i + 2;
 
-            for(let a = 0; a < 4; a++){
+            for(let a = 0; a < 4; a++) {
                 let char = str.charAt(pos + offset + a * 2);
                 if(char == '-'){
                     char = str.charAt(pos + ++offset + a * 2);
@@ -358,8 +344,8 @@ class Game {
             }
         ); //sort the array
 
-        console.log("post sort: ");
-        console.log(arr);
+        /*console.log("post sort: ");
+        console.log(arr);*/
 
         for(let last = arr.length-2, next = arr.length-1; last >= 0; last--, next--) {
             if(arr[last][0] == arr[next][0] && arr[last][1] == arr[next][1]) {
@@ -369,6 +355,35 @@ class Game {
         } //for "must" be in reverse order
 
         return arr;
+    }
+
+    clearBoard(){
+        this.board = [
+            [
+                ["white","white","white","white"],
+                ["empty","empty","empty","empty"],
+                ["empty","empty","empty","empty"],
+                ["black","black","black","black"]
+            ],
+            [
+                ["white","white","white","white"],
+                ["empty","empty","empty","empty"],
+                ["empty","empty","empty","empty"],
+                ["black","black","black","black"]
+            ],
+            [
+                ["white","white","white","white"],
+                ["empty","empty","empty","empty"],
+                ["empty","empty","empty","empty"],
+                ["black","black","black","black"]
+            ],
+            [
+                ["white","white","white","white"],
+                ["empty","empty","empty","empty"],
+                ["empty","empty","empty","empty"],
+                ["black","black","black","black"]
+            ]
+        ];
     }
 
 }
