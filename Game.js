@@ -141,7 +141,7 @@ class Game {
         else
             this.boardPos(XF, YF, valorInicial);
 
-        //this.scene.applyVisualChanges(move);
+        this.scene.applyVisualChanges(move);
     }
     
     // coordenadas 1-8
@@ -300,7 +300,7 @@ class Game {
         }
     }
 
-    parseStringToArray(str){
+    parseStringToArray(str) {
         let arr = [];
 
         let numInnerArrays = Math.round((str.length-1) / 10);
@@ -325,7 +325,38 @@ class Game {
             arr.push(subArr);
         }
 
-        //console.log("arr: " + arr);
+        /*console.log("pre sort: ");
+        console.log(arr);*/
+
+        return this.removeDuplicates(arr);
+    }
+
+    // this function shouldn't be needed but ohh well, prolog strikes again
+    removeDuplicates(arr) {
+        if(arr.length < 2) return arr;
+
+        /*console.log("pre sort: ");
+        console.log(arr);*/
+
+        arr.sort(
+            (a,b) => {
+                for(let i = 0; i < 4; i++) {
+                    if(a[i] > b[i]) return 1;
+                
+                    if(a[i] < b[i]) return -1;
+                }
+            }
+        ); //sort the array
+
+        console.log("post sort: ");
+        console.log(arr);
+
+        for(let last = arr.length-2, next = arr.length-1; last >= 0; last--, next--) {
+            if(arr[last][0] == arr[next][0] && arr[last][1] == arr[next][1]) {
+                //remove 1st occurence
+                arr.splice(last, 1);
+            }
+        } //for "must" be in reverse order
 
         return arr;
     }
