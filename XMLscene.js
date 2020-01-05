@@ -102,6 +102,34 @@ class XMLscene extends CGFscene {
                 ["blackPieceNumber1-Of-board-up-right","blackPieceNumber2-Of-board-up-right","blackPieceNumber3-Of-board-up-right","blackPieceNumber4-Of-board-up-right"]
             ]
         ];
+
+        //AuxiliaryBoard To reach each Cell Id More easily
+        this.cellIDBoard=[
+            [
+                ["cell-1-1-up-left","cell-1-2-up-left","cell-1-3-up-left","cell-1-4-up-left"],
+                ["cell-2-1-up-left","cell-2-2-up-left","cell-2-3-up-left","cell-2-4-up-left"],
+                ["cell-3-1-up-left","cell-3-2-up-left","cell-3-3-up-left","cell-3-4-up-left"],
+                ["cell-4-1-up-left","cell-4-2-up-left","cell-4-3-up-left","cell-4-4-up-left"]
+            ],
+            [
+                ["cell-1-1-down-right","cell-1-2-down-right","cell-1-3-down-right","cell-1-4-down-right"],
+                ["cell-2-1-down-right","cell-2-2-down-right","cell-2-3-down-right","cell-2-4-down-right"],
+                ["cell-3-1-down-right","cell-3-2-down-right","cell-3-3-down-right","cell-3-4-down-right"],
+                ["cell-4-1-down-right","cell-4-2-down-right","cell-4-3-down-right","cell-4-4-down-right"]
+            ],
+            [
+                ["cell-1-1-down-left","cell-1-2-down-left","cell-1-3-down-left","cell-1-4-down-left"],
+                ["cell-2-1-down-left","cell-2-2-down-left","cell-2-3-down-left","cell-2-4-down-left"],
+                ["cell-3-1-down-left","cell-3-2-down-left","cell-3-3-down-left","cell-3-4-down-left"],
+                ["cell-4-1-down-left","cell-4-2-down-left","cell-4-3-down-left","cell-4-4-down-left"]
+            ],
+            [
+                ["cell-1-1-up-right","cell-1-2-up-right","cell-1-3-up-right","cell-1-4-up-right"],
+                ["cell-2-1-up-right","cell-2-2-up-right","cell-2-3-up-right","cell-2-4-up-right"],
+                ["cell-3-1-up-right","cell-3-2-up-right","cell-3-3-up-right","cell-3-4-up-right"],
+                ["cell-4-1-up-right","cell-4-2-up-right","cell-4-3-up-right","cell-4-4-up-right"]
+            ]
+        ];
     }
 
 
@@ -596,6 +624,12 @@ class XMLscene extends CGFscene {
         }
 
         return temp;
+    }
+
+    disableSelectedMaterial(){
+        for(let component in this.graph.components){
+            this.graph.components[component].selectedByPicking(false);
+        }
     }
 
     sleep(ms) {

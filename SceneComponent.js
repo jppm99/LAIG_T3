@@ -30,6 +30,7 @@ class SceneComponent {
         this.length_t=length_t;
 
         this.animation_ref=animation_ref;
+        this.selected=false;
         this.runningAnimatons=[];
     }
 
@@ -44,6 +45,10 @@ class SceneComponent {
             curr_material = inherited_material;
         else if(inherited_material!="inherit")
             this.graph.materials[inherited_material].setTexture(null);
+
+        if(this.selected){
+            curr_material="SELECTED";
+        }
 
         if(this.texture_ref=="inherit") {
             curr_texture  = inherited_texture;
@@ -90,5 +95,9 @@ class SceneComponent {
     addRunningAnimation(runningAnimationRef){
         var copiedAnimation = new KeyframeAnimation(this.scene, this.scene.graph.animations[runningAnimationRef].keyframes);
         this.runningAnimatons.push(copiedAnimation)
+    }
+
+    selectedByPicking(sel){
+        this.selected=sel;
     }
 }

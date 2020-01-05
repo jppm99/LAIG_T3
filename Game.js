@@ -181,15 +181,20 @@ class Game {
         if(this.scene.pick == undefined) return null;
 
         let pos = this.scene.pick;
-        let piece = this.board[Math.floor(pos/100 - 1)][Math.floor((pos/10) % 10)][Math.floor(pos%10)]; 
+        let piece = this.board[Math.floor(pos/100 - 1)][Math.floor((pos/10) % 10)][Math.floor(pos%10)];
 
-        switch(this.pickingState) {
+        //For highlighting the movement
+        let pieceId=this.scene.pieceIDBoard[Math.floor(pos/100 - 1)][Math.floor((pos/10) % 10)][Math.floor(pos%10)];
+        let cellId=this.scene.cellIDBoard[Math.floor(pos/100 - 1)][Math.floor((pos/10) % 10)][Math.floor(pos%10)];
+
+        switch(this.pickingState){
             case 0:
                 if(piece != color){
                     console.log("Invalid Selection -> Select the first piece you want to move\n");
                     break;
                 }
                 this.chooseMoveHuman.p1 = pos;
+                this.scene.graph.components[pieceId].selectedByPicking(true);
                 this.pickingState++;
                 break;
             case 1:
@@ -198,6 +203,7 @@ class Game {
                     break;
                 }
                 this.chooseMoveHuman.p2 = pos;
+                this.scene.graph.components[cellId].selectedByPicking(true);
                 this.pickingState++;
                 break;
             case 2:
@@ -206,6 +212,7 @@ class Game {
                     break;
                 }
                 this.chooseMoveHuman.p3 = pos;
+                this.scene.graph.components[pieceId].selectedByPicking(true);
                 this.pickingState++;
                 break
             case 3:
@@ -214,7 +221,9 @@ class Game {
                     break;
                 }
                 this.chooseMoveHuman.p4 = pos;
+                this.scene.graph.components[cellId].selectedByPicking(true);
                 this.pickingState = 0;
+                this.scene.disableSelectedMaterial();
                 return [this.chooseMoveHuman.p1, this.chooseMoveHuman.p2, this.chooseMoveHuman.p3, this.chooseMoveHuman.p4];
         }
 
