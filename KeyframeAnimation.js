@@ -35,7 +35,7 @@ class KeyframeAnimation extends Animation {
     update(currInstant) {
         this.time += currInstant;
 
-        if(this.animationDone || this.time<0) return;
+        if(this.animationDone) return;
 
         if(this.time > this.keyframes[this.currentKeyFrameIndex].instant){
 
@@ -48,7 +48,7 @@ class KeyframeAnimation extends Animation {
 
             if (this.currentKeyFrameIndex >= this.keyframes.length) {
                 this.animationDone=true;
-                this.scene.runningAnimationDelay-=RUNNING_ANIMATION_DURATION;
+                //this.scene.removeRunningAnimationDelay();
                 return;
             }
 
@@ -83,8 +83,9 @@ class KeyframeAnimation extends Animation {
     calculateAnimationValues(){
         var currDeltaTime=(this.time-this.previousInstant)/this.scene.SCENE_UPDATE_PERIOD;
 
-        if(this.time<0)
-            currDeltaTime=0;
+        if(this.time<0) {
+            currDeltaTime = 0;
+        }
 
         //translation
         this.animation_translate_coords[0]=this.translateFactor[0]*currDeltaTime+this.inicial_translate_coords[0];

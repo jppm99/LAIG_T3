@@ -635,6 +635,10 @@ class XMLscene extends CGFscene {
         }
     }
 
+    removeRunningAnimationDelay(){
+        this.runningAnimationDelay-=RUNNING_ANIMATION_DURATION;
+    }
+
     sleep(ms) {
         return new Promise(resolve => setTimeout(resolve, ms));
     }
