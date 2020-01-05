@@ -63,21 +63,17 @@ class Game {
             
             if(movement == null) return;
 
-            console.log("move " + movement);
-
             ret = this.move(movement, color);
         }
         else{
             ret = this.chooseMoveComputer(player, color); // not sure -> need to check prolog
         }
 
-        //console.log(ret);
-
         if(ret == null) {
             console.log("Server return was: " + ret);
             return;
         }
-
+        
         let returnedArray = this.parseStringToArray(ret);
 
         if(returnedArray.length === 0) {
@@ -88,8 +84,15 @@ class Game {
         returnedArray.sort((a, b) => (a[4] > b[4]) ? 1 : -1);
 
         this.changesList.push(returnedArray);
-        returnedArray.forEach(this.updateBoard);
+
+        for (var key in returnedArray) {
+            if (returnedArray.hasOwnProperty(key)) {
+                this.updateBoard(returnedArray[key]);
+            }
+        }
         
+        console.log("Board:");
+        console.log(this.board);
         this.turn++;
     }
 
@@ -107,8 +110,8 @@ class Game {
     updateBoard(move) {
         let XI = move[0],
             YI = move[1],
-            XF = move[3],
-            YF = move[4];
+            XF = move[2],
+            YF = move[3];
 
         let valorInicial = this.boardPos(XI, YI, "empty");
 
@@ -157,7 +160,7 @@ class Game {
         switch(this.pickingState) {
             case 0:
                 if(piece != color){
-                    console.log("Invalid Selection\n");
+                    console.log("Invalid Selection -> Select the first piece you want to move\n");
                     break;
                 }
                 this.chooseMoveHuman.p1 = pos;
@@ -165,7 +168,7 @@ class Game {
                 break;
             case 1:
                 if(piece == color){
-                    console.log("Invalid Selection\n");
+                    console.log("Invalid Selection -> Select where to move your first piece\n");
                     break;
                 }
                 this.chooseMoveHuman.p2 = pos;
@@ -173,7 +176,7 @@ class Game {
                 break;
             case 2:
                 if(piece != color){
-                    console.log("Invalid Selection\n");
+                    console.log("Invalid Selection -> Select the second piece you want to move\n");
                     break;
                 }
                 this.chooseMoveHuman.p3 = pos;
@@ -181,7 +184,7 @@ class Game {
                 break
             case 3:
                 if(piece == color){
-                    console.log("Invalid Selection\n");
+                    console.log("Invalid Selection -> Select where to move your second piece\n");
                     break;
                 }
                 this.chooseMoveHuman.p4 = pos;
@@ -234,7 +237,12 @@ class Game {
 
         this.board = [...this.initialBoard];
         for(let i = 0; i < this.changesList.length; i++) {
-            this.changesList[i].forEach(this.updateBoard);
+            //this.changesList[i].forEach(this.updateBoard);
+            for (var key in this.changesList[i]) {
+                if (this.changesList[i].hasOwnProperty(key)) {
+                    this.updateBoard(this.changesList[i][key]);
+                }
+            }
         }
 
         this.turn--;
@@ -244,7 +252,12 @@ class Game {
         console.log("movie!");
         this.board = [...this.initialBoard];
         for(let i = 0; i < this.changesList.length; i++) {
-            this.changesList[i].forEach(this.updateBoard);
+            //this.changesList[i].forEach(this.updateBoard);
+            for (var key in this.changesList[i]) {
+                if (this.changesList[i].hasOwnProperty(key)) {
+                    this.updateBoard(this.changesList[i][key]);
+                }
+            }
             //add animation
         }
     }
@@ -265,7 +278,22 @@ class Game {
     parseStringToArray(str){
         let arr = [];
 
-        //TODO
+        let numInnerArrays = Math.round((str.length-1) / 10);
+
+        for(let i = 0; i < numInnerArrays; i++) {
+            let subArr = [];
+
+            let pos = 10 * i + 2;
+
+            subArr.push(str.charAt(pos));
+            subArr.push(str.charAt(pos+2));
+            subArr.push(str.charAt(pos+4));
+            subArr.push(str.charAt(pos+6));
+
+            arr.push(subArr);
+        }
+
+        //console.log(arr);
 
         return arr;
     }

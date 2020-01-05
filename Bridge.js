@@ -18,20 +18,20 @@ class Bridge {
     makeMove(gameState, team, move1, move2) {
         let sentStr = "move(" + gameState + "," + team + "," + move1 + "," + move2 + ")";
 
-        console.log("Sent: " + sentStr);
+        //console.log("Sent: " + sentStr);
 
         this.makeRequest(sentStr);
 
         //this.timeout(500); // synchronization issues
 
-        console.log("this.reply -> " + typeof(Bridge.reply) + " - " + Bridge.reply);
+        //console.log("this.reply -> " + typeof(Bridge.reply) + " - " + Bridge.reply);
 
         return Bridge.reply;
     }
 
     makeMoveComputer(gameState, team, diff) {
         let sentStr = "computer_move(" + this.parseGameState(gameState) + "," + team + "," + diff + ")";
-        console.log("Sent: " + sentStr);
+        //console.log("Sent: " + sentStr);
 
         this.makeRequest(sentStr);
 
@@ -60,7 +60,6 @@ class Bridge {
     handleReply(data) {
         //console.log("Reply: " + data.target.response);
         Bridge.reply = data.target.response;
-        console.log(Bridge.reply + " type is " + typeof(Bridge.reply));
     }
 
     handleError() {
