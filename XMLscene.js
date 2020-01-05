@@ -487,6 +487,8 @@ class XMLscene extends CGFscene {
         var correspondingIAnimation;
         var correspondingFAnimation;
         var moveTwoSpaces=false;
+        if(Math.abs(XF-XI)>=3 || Math.abs(YF-YI)>=3)
+            return;
         if(Math.abs(XF-XI)===2 || Math.abs(YF-YI)===2){
             moveTwoSpaces=true;
         }
