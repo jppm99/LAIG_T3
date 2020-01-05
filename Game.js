@@ -71,17 +71,24 @@ class Game {
             ret = this.chooseMoveComputer(player, color); // not sure -> need to check prolog
         }
 
-        console.log(ret);
+        //console.log(ret);
 
-        if(ret.length === 0) {
+        if(ret == null) {
+            console.log("Server return was: " + ret);
+            return;
+        }
+
+        let returnedArray = this.parseStringToArray(ret);
+
+        if(returnedArray.length === 0) {
             console.log("Invalid move\n");
             return;
         }
 
-        ret.sort((a, b) => (a[4] > b[4]) ? 1 : -1);
+        returnedArray.sort((a, b) => (a[4] > b[4]) ? 1 : -1);
 
-        this.changesList.push(ret);
-        ret.forEach(this.updateBoard);
+        this.changesList.push(returnedArray);
+        returnedArray.forEach(this.updateBoard);
         
         this.turn++;
     }
@@ -253,6 +260,14 @@ class Game {
         else if(axis == "y"){
             return y + 4 * (tab > 2) + 1;
         }
+    }
+
+    parseStringToArray(str){
+        let arr = [];
+
+        //TODO
+
+        return arr;
     }
 
 }
