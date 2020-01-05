@@ -21,6 +21,7 @@ class MyInterface extends CGFinterface {
         this.gui = new dat.GUI();
 
         // add a group of controls (and open/expand by default)
+        this.gui.add(this.scene, 'scenario', ["Cabin", "Park", "Ocean"]).name('Scenario');
 
         this.lightGroup = this.gui.addFolder("Lights");
         this.lightGroup.close();

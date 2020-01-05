@@ -1562,6 +1562,7 @@ class MySceneGraph {
         //this.primitives['demoSphere'].display();
         //this.primitives['demoTorus'].display();
 
-        this.components[this.idRoot].display("inherit", "none", 1, 1);
+        this.components["shobuGame"].display("inherit", "none", 1, 1);
+        this.components[this.scene.scenario].display("inherit", "none", 1, 1);
     }
 }

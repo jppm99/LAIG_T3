@@ -48,6 +48,8 @@ class XMLscene extends CGFscene {
 
         this.y = 0;
 
+        this.scenario = 'Cabin';
+
         //Camera Animation
         this.camera_animationStart=false;
 
@@ -262,7 +264,7 @@ class XMLscene extends CGFscene {
         this.pushMatrix();
         this.translate(-2.5, 0.5, -3);
 
-        for(var lin=0; lin<4; lin++) {
+        for(var lin=0; lin<4; lin++){
             for (var col = 0; col < 4; col++) {
                 this.pushMatrix();
                 this.translate(initial_x + col * position_delta, 0, initial_z + lin * position_delta);
