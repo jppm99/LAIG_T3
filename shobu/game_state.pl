@@ -1,3 +1,4 @@
+% black, white or inProgress
 game_over(Board, Winner):-
     Board = [B1, B2, B3, B4],
 

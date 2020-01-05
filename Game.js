@@ -93,6 +93,16 @@ class Game {
         
         console.log("Board:");
         console.log(this.board);
+
+        let state = this.bridge.getState(this.board);
+        if(state != "inProgress") {
+            console.log("*********************");
+            console.log(state + " WON!");
+            console.log("*********************");
+
+            this.gameRunning = false;
+        }
+
         this.turn++;
     }
 
