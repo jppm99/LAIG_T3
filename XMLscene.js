@@ -1,5 +1,6 @@
 var DEGREE_TO_RAD = Math.PI / 180;
 var CAMERA_ANIMATION_DURATION = 20;
+var RUNNING_ANIMATION_DURATION = 3;
 
 /**
  * XMLscene class, representing the scene that is to be rendered.
@@ -130,6 +131,8 @@ class XMLscene extends CGFscene {
                 ["cell-4-1-up-right","cell-4-2-up-right","cell-4-3-up-right","cell-4-4-up-right"]
             ]
         ];
+
+        this.runningAnimationDelay=0;
     }
 
 
