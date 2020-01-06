@@ -517,6 +517,7 @@ class XMLscene extends CGFscene {
             YF = move[3];
 
         var correspondingIAnimation;
+        var correspondingIntermediateAnimation;
         var correspondingFAnimation;
         var moveTwoSpaces=false;
         if(Math.abs(XF-XI)>=3 || Math.abs(YF-YI)>=3)
@@ -528,6 +529,7 @@ class XMLscene extends CGFscene {
             if(YF<YI){
                 if(moveTwoSpaces){
                     correspondingIAnimation = "move-Up-Two";
+                    correspondingIntermediateAnimation = "move-Up-Two";
                 }else {
                     correspondingIAnimation = "move-Up-One";
                 }
@@ -535,6 +537,7 @@ class XMLscene extends CGFscene {
             }else{
                 if(moveTwoSpaces){
                     correspondingIAnimation = "move-Down-Two";
+                    correspondingIntermediateAnimation = "move-Down-Two";
                 }else {
                     correspondingIAnimation = "move-Down-One";
                 }
@@ -544,6 +547,7 @@ class XMLscene extends CGFscene {
             if(XF<XI){
                 if(moveTwoSpaces){
                     correspondingIAnimation = "move-Left-Two";
+                    correspondingIntermediateAnimation = "move-Left-Two";
                 }else {
                     correspondingIAnimation = "move-Left-One";
                 }
@@ -551,6 +555,7 @@ class XMLscene extends CGFscene {
             }else{
                 if(moveTwoSpaces){
                     correspondingIAnimation = "move-Right-Two";
+                    correspondingIntermediateAnimation = "move-Right-Two";
                 }else {
                     correspondingIAnimation = "move-Right-One";
                 }
@@ -560,6 +565,7 @@ class XMLscene extends CGFscene {
             if(XF<XI && YF<YI){
                 if(moveTwoSpaces){
                     correspondingIAnimation = "move-Up-Left-Two";
+                    correspondingIntermediateAnimation = "move-Up-Left-Two";
                 }else {
                     correspondingIAnimation = "move-Up-Left-One";
                 }
@@ -567,6 +573,7 @@ class XMLscene extends CGFscene {
             }else if(XF>XI && YF<YI){
                 if(moveTwoSpaces){
                     correspondingIAnimation = "move-Up-Right-Two";
+                    correspondingIntermediateAnimation = "move-Up-Right-Two";
                 }else {
                     correspondingIAnimation = "move-Up-Right-One";
                 }
@@ -574,6 +581,7 @@ class XMLscene extends CGFscene {
             }else if(XF<XI && YF>YI){
                 if(moveTwoSpaces){
                     correspondingIAnimation = "move-Down-Left-Two";
+                    correspondingIntermediateAnimation = "move-Down-Left-Two";
                 }else {
                     correspondingIAnimation = "move-Down-Left-One";
                 }
@@ -581,6 +589,7 @@ class XMLscene extends CGFscene {
             }else{
                 if(moveTwoSpaces){
                     correspondingIAnimation = "move-Down-Right-Two";
+                    correspondingIntermediateAnimation = "move-Down-Right-Two";
                 }else {
                     correspondingIAnimation = "move-Down-Right-One";
                 }
@@ -589,14 +598,32 @@ class XMLscene extends CGFscene {
         }
 
         let valorInicial = this.visualBoardPos(XI, YI, "empty");
+        let valorIntermedio="undefined";
         let valorFinal="undefined";
 
         if(XF >= 0 && YF >= 0) {
             valorFinal=this.visualBoardPos(XF, YF, valorInicial);
         }
 
+        if(moveTwoSpaces){
+            let XInt=XI;
+            let YInt=YI;
+            if(XI!==XF){
+                let XInt=XF-XI;
+            }
+            if(YI!==YF){
+                let YInt=YF-YI;
+            }
+
+            valorIntermedio=this.visualBoardPos(XInt, YInt, "empty");
+        }
+
         if(valorInicial!=="empty"){
             this.graph.components[valorInicial].addRunningAnimation(correspondingIAnimation);
+        }
+
+        if(valorIntermedio!=="undefined" && valorFinal!=="empty"){
+            this.graph.components[valorFinal].addRunningAnimation(correspondingIntermediateAnimation);
         }
 
         if(valorFinal!=="undefined" && valorFinal!=="empty"){
