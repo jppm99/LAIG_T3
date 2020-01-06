@@ -250,8 +250,8 @@ class Game {
 
         console.log(this.changesList);
 
-        this.clearBoard();
-
+        this.clearBoard(true);
+        
         for(let i = 0; i < this.changesList.length; i++) {
             //this.changesList[i].forEach(this.updateBoard);
             for (var key in this.changesList[i]) {
@@ -357,7 +357,12 @@ class Game {
         return arr;
     }
 
-    clearBoard(){
+    clearBoard(fullClear){
+        if(fullClear) {
+            this.scene.resetRunningAnimations();
+            this.scene.resetPicking();
+        }
+
         this.board = [
             [
                 ["white","white","white","white"],
