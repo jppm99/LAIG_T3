@@ -1,6 +1,6 @@
 var DEGREE_TO_RAD = Math.PI / 180;
 var CAMERA_ANIMATION_DURATION = 20;
-var RUNNING_ANIMATION_DURATION = 8;
+var RUNNING_ANIMATION_DURATION = 2000;
 
 /**
  * XMLscene class, representing the scene that is to be rendered.

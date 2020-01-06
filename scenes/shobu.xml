@@ -2123,7 +2123,7 @@
 
         <component id="whitePiecesOf-board-up-left">
             <transformation>
-               <transformationref id="whitePieces"/>
+                <transformationref id="whitePieces"/>
             </transformation>
 
             <materials>
@@ -3131,23 +3131,23 @@
             </children>
         </component>
 
-         <component id="fours_leg">
-             <transformation>
-             </transformation>
+        <component id="fours_leg">
+            <transformation>
+            </transformation>
 
-             <materials>
-                 <material id="inherit" />
-             </materials>
+            <materials>
+                <material id="inherit" />
+            </materials>
 
-             <texture id="inherit" />
+            <texture id="inherit" />
 
-             <children>
-                 <componentref id="legUpLeft"/>
-                 <componentref id="legUpRight"/>
-                 <componentref id="legDownLeft"/>
-                 <componentref id="legDownRight"/>
-             </children>
-         </component>
+            <children>
+                <componentref id="legUpLeft"/>
+                <componentref id="legUpRight"/>
+                <componentref id="legDownLeft"/>
+                <componentref id="legDownRight"/>
+            </children>
+        </component>
 
         <component id="legUpLeft">
             <transformation>

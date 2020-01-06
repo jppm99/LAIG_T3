@@ -102,7 +102,7 @@ class SceneComponent {
     }
 
     removeRunningAnimationDelay(){
-        this.scene.runningAnimationDelay+=1;
+        this.scene.runningAnimationDelay-=1;
     }
 
     selectedByPicking(sel){

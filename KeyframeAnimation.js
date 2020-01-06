@@ -49,6 +49,21 @@ class KeyframeAnimation extends Animation {
 
             if (this.currentKeyFrameIndex >= this.keyframes.length) {
                 this.animationDone=true;
+
+                this.animation_translate_coords[0]=this.keyframes[this.keyframes.length-1].translate_coords[0];
+                this.animation_translate_coords[1]=this.keyframes[this.keyframes.length-1].translate_coords[1];
+                this.animation_translate_coords[2]=this.keyframes[this.keyframes.length-1].translate_coords[2];
+
+                //rotation
+                this.animation_rotate_coords[0]=this.keyframes[this.keyframes.length-1].rotate_coords[0];
+                this.animation_rotate_coords[1]=this.keyframes[this.keyframes.length-1].rotate_coords[1];
+                this.animation_rotate_coords[2]=this.keyframes[this.keyframes.length-1].rotate_coords[2];
+
+                //scale
+                this.animation_scale_coords[0]=this.keyframes[this.keyframes.length-1].scale_coords[0];
+                this.animation_scale_coords[1]=this.keyframes[this.keyframes.length-1].scale_coords[1];
+                this.animation_scale_coords[2]=this.keyframes[this.keyframes.length-1].scale_coords[2];
+
                 this.scene.removeRunningAnimationDelay();
                 return;
             }
