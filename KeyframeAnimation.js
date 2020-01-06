@@ -49,7 +49,7 @@ class KeyframeAnimation extends Animation {
 
             if (this.currentKeyFrameIndex >= this.keyframes.length) {
                 this.animationDone=true;
-                //this.scene.removeRunningAnimationDelay();
+                this.scene.removeRunningAnimationDelay();
                 return;
             }
 
