@@ -36,7 +36,9 @@ class KeyframeAnimation extends Animation {
     update(currInstant) {
         this.time += currInstant;
 
-        if(this.animationDone) return;
+        if(this.animationDone) {
+            return;
+        }
 
         if(this.time > this.keyframes[this.currentKeyFrameIndex].instant+this.delay){
 

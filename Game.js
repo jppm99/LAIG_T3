@@ -212,8 +212,13 @@ class Game {
             default:
                 break;
         }
-        this.scene.addRunningAnimationDelay();
-        return this.bridge.makeMoveComputer(this.board, color, diff);
+
+        var value=this.bridge.makeMoveComputer(this.board, color, diff);
+
+        if(value!=="[]") {
+            this.scene.addRunningAnimationDelay();
+        }
+        return value;
     }
 
     move(movement, color) {
@@ -231,8 +236,12 @@ class Game {
         x4 = this.decodeCoord(movement[3], "x");
         y4 = this.decodeCoord(movement[3], "y");
 
-        this.scene.addRunningAnimationDelay();
-        return this.bridge.makeMove(this.board, color, [x1, y1, x2, y2], [x3, y3, x4, y4]);
+        var value=this.bridge.makeMove(this.board, color, [x1, y1, x2, y2], [x3, y3, x4, y4]);
+
+        if(value!=="[]") {
+            this.scene.addRunningAnimationDelay();
+        }
+        return value;
     }
 
     undo() {

@@ -133,7 +133,7 @@ class XMLscene extends CGFscene {
             ]
         ];
 
-        this.runningAnimationDelay=0;
+        this.runningAnimationDelay=-1;
     }
 
 
@@ -408,6 +408,8 @@ class XMLscene extends CGFscene {
         this.game.play();
 
         this._display();
+
+        //console.log(this.runningAnimationDelay);
     }
 
     _display() {
@@ -609,13 +611,16 @@ class XMLscene extends CGFscene {
             let XInt=XI;
             let YInt=YI;
             if(XI!==XF){
-                let XInt=XF-XI;
+                XInt=Math.abs(XF-XI);
             }
             if(YI!==YF){
-                let YInt=YF-YI;
+                YInt=Math.abs(YF-YI);
             }
 
             valorIntermedio=this.visualBoardPos(XInt, YInt, "empty");
+           // console.log(XInt);
+           // console.log(YInt);
+           // console.log(valorIntermedio);
         }
 
         if(valorInicial!=="empty"){
@@ -629,6 +634,8 @@ class XMLscene extends CGFscene {
         if(valorFinal!=="undefined" && valorFinal!=="empty"){
             this.graph.components[valorFinal].addRunningAnimation(correspondingFAnimation);
         }
+
+        console.log(this.pieceIDBoard);
 
     }
 
@@ -648,12 +655,13 @@ class XMLscene extends CGFscene {
 
         let indice3 = (X-1) % 4;
 
-        let temp = this.pieceIDBoard[indice1][indice2][indice3];
+        var temp = this.pieceIDBoard[indice1][indice2][indice3];
 
         if(P != undefined) {
             this.pieceIDBoard[indice1][indice2][indice3] = P;
         }
 
+        //console.log(temp);
         return temp;
     }
 
@@ -703,8 +711,9 @@ class XMLscene extends CGFscene {
     }
 
     removeRunningAnimationDelay() {
-        if(this.runningAnimationDelay > 0) this.runningAnimationDelay--;
-        //console.log(this.runningAnimationDelay);
+        if(this.runningAnimationDelay<-1) {
+            this.runningAnimationDelay--;
+        }
     }
 
     sleep(ms) {
