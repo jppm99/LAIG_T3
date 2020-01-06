@@ -97,14 +97,6 @@ class SceneComponent {
         this.runningAnimatons.push(copiedAnimation)
     }
 
-    addRunningAnimationDelay(){
-        this.scene.runningAnimationDelay+=1;
-    }
-
-    removeRunningAnimationDelay(){
-        this.scene.runningAnimationDelay-=1;
-    }
-
     selectedByPicking(sel){
         this.selected=sel;
     }

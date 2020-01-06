@@ -8,7 +8,7 @@
  * @param currInstant - Time in seconds since the start of scene render.
  * */
 class KeyframeAnimation extends Animation {
-    constructor(scene, keyframes, delay= 0) {
+    constructor(scene, keyframes, delay=0) {
         super();
         this.scene = scene;
         this.keyframes = keyframes;

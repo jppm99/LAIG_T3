@@ -1,6 +1,6 @@
 var DEGREE_TO_RAD = Math.PI / 180;
 var CAMERA_ANIMATION_DURATION = 20;
-var RUNNING_ANIMATION_DURATION = 2000;
+var RUNNING_ANIMATION_DURATION = 3;
 
 /**
  * XMLscene class, representing the scene that is to be rendered.
@@ -696,6 +696,10 @@ class XMLscene extends CGFscene {
                 ["blackPieceNumber1-Of-board-up-right","blackPieceNumber2-Of-board-up-right","blackPieceNumber3-Of-board-up-right","blackPieceNumber4-Of-board-up-right"]
             ]
         ];
+    }
+
+    addRunningAnimationDelay(){
+        this.runningAnimationDelay++;
     }
 
     removeRunningAnimationDelay() {

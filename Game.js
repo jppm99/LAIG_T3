@@ -218,6 +218,7 @@ class Game {
             default:
                 break;
         }
+        this.scene.addRunningAnimationDelay();
         return this.bridge.makeMoveComputer(this.board, color, diff);
     }
 
@@ -236,8 +237,8 @@ class Game {
         x4 = this.decodeCoord(movement[3], "x");
         y4 = this.decodeCoord(movement[3], "y");
 
-        return this.bridge.makeMove(this.board, color, [x1, y1, x2, y2], [x3, y3, x4, y4]);
         this.scene.addRunningAnimationDelay();
+        return this.bridge.makeMove(this.board, color, [x1, y1, x2, y2], [x3, y3, x4, y4]);
     }
 
     undo() {
