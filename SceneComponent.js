@@ -102,4 +102,8 @@ class SceneComponent {
     selectedByPicking(sel){
         this.selected=sel;
     }
+
+    resetRunningAnimations(){
+        this.runningAnimatons=[];
+    }
 }

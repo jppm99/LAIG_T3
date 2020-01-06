@@ -635,6 +635,12 @@ class XMLscene extends CGFscene {
         }
     }
 
+    resetRunningAnimations(){
+        for(let component in this.graph.components){
+            this.graph.components[component].resetRunningAnimations();
+        }
+    }
+
     removeRunningAnimationDelay(){
         this.runningAnimationDelay-=RUNNING_ANIMATION_DURATION;
     }
