@@ -77,7 +77,7 @@ class XMLscene extends CGFscene {
         this.transparencyShader=new CGFshader(this.gl, "shaders/sc.vert", "shaders/transparency.frag");
 
         //AuxiliaryBoard To reach each Piece Id More easily
-        this.pieceIDBoard=[
+        this.initialpieceIDBoard=[
             [
                 ["whitePieceNumber1-Of-board-up-left","whitePieceNumber2-Of-board-up-left","whitePieceNumber3-Of-board-up-left","whitePieceNumber4-Of-board-up-left"],
                 ["empty","empty","empty","empty"],
@@ -103,6 +103,8 @@ class XMLscene extends CGFscene {
                 ["blackPieceNumber1-Of-board-up-right","blackPieceNumber2-Of-board-up-right","blackPieceNumber3-Of-board-up-right","blackPieceNumber4-Of-board-up-right"]
             ]
         ];
+
+        this.pieceIDBoard=[...this.initialpieceIDBoard];
 
         //AuxiliaryBoard To reach each Cell Id More easily
         this.cellIDBoard=[
@@ -639,6 +641,8 @@ class XMLscene extends CGFscene {
         for(let component in this.graph.components){
             this.graph.components[component].resetRunningAnimations();
         }
+
+        this.pieceIDBoard=[...this.initialpieceIDBoard];
     }
 
     removeRunningAnimationDelay(){
