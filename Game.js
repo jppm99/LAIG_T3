@@ -46,12 +46,8 @@ class Game {
             console.log("Server return was: " + ret);
             return;
         }
-
-        //console.log(ret);
         
         let returnedArray = this.parseStringToArray(ret);
-
-        //console.log("after ret: " + returnedArray);
 
         if(returnedArray.length === 0) {
             console.log("Invalid move\n");
@@ -62,8 +58,6 @@ class Game {
             if(a[3] > b[3]) return 1;
             else return -1;
         });
-
-        //console.log(returnedArray);
         
         this.changesList.push(returnedArray);
 
@@ -75,6 +69,10 @@ class Game {
         
         console.log("Board:");
         console.log(this.board);
+
+        console.log("Current Score:");
+        console.log("White -> " + this.whiteScore);
+        console.log("Black -> " + this.blackScore);
 
         let state = this.bridge.getState(this.board);
         if(state != "inProgress") {
@@ -133,10 +131,6 @@ class Game {
         let indice2 = (Y-1) % 4;
 
         let indice3 = (X-1) % 4;
-
-        /*console.log(X + "-" + Y);
-        console.log(indice1 + "-" + indice2 + "-" + indice3);*/
-        //console.log("board-> " + this.board);
 
         let temp = this.board[indice1][indice2][indice3];
         
@@ -241,15 +235,11 @@ class Game {
     }
 
     undo() {
-        console.log("undo!");
+        console.log("Undo!");
 
-        console.log(this.changesList);
-        
         if(this.changesList.length == 0) return;
 
         this.changesList.pop();
-
-        console.log(this.changesList);
 
         this.clearBoard(true);
         
@@ -262,14 +252,11 @@ class Game {
             }
         }
 
-        console.log("New board:");
-        console.log(this.board);
-
         this.turn--;
     }
 
     movie() {
-        console.log("movie!");
+        console.log("Movie!");
         
         this.clearBoard(true);
 
@@ -278,6 +265,7 @@ class Game {
             for (var key in this.changesList[i]) {
                 if (this.changesList[i].hasOwnProperty(key)) {
                     this.updateBoard(this.changesList[i][key]);
+                    //this.bridge.timeout(1000);
                 }
             }
             //add animation
@@ -322,18 +310,12 @@ class Game {
             arr.push(subArr);
         }
 
-        /*console.log("pre sort: ");
-        console.log(arr);*/
-
         return this.removeDuplicates(arr);
     }
 
     // this function shouldn't be needed but ohh well, prolog strikes again
     removeDuplicates(arr) {
         if(arr.length < 2) return arr;
-
-        /*console.log("pre sort: ");
-        console.log(arr);*/
 
         arr.sort(
             (a,b) => {
@@ -345,15 +327,14 @@ class Game {
             }
         ); //sort the array
 
-        /*console.log("post sort: ");
-        console.log(arr);*/
-
         for(let last = arr.length-2, next = arr.length-1; last >= 0; last--, next--) {
-            if(arr[last][0] == arr[next][0] && arr[last][1] == arr[next][1]) {
+            if(arr[last][0] == arr[next][0] && arr[last][1] == arr[next][1] && arr[last][2] < 0) {
                 //remove 1st occurence
                 arr.splice(last, 1);
             }
         } //for "must" be in reverse order
+
+        //console.log(arr);
 
         return arr;
     }
