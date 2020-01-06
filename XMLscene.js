@@ -671,10 +671,9 @@ class XMLscene extends CGFscene {
         ];
     }
 
-    removeRunningAnimationDelay(){
-        this.runningAnimationDelay-=1;
-        if(this.runningAnimationDelay < 0) this.runningAnimationDelay = 0;
-        console.log(this.runningAnimationDelay);
+    removeRunningAnimationDelay() {
+        if(this.runningAnimationDelay > 0) this.runningAnimationDelay--;
+        //console.log(this.runningAnimationDelay);
     }
 
     sleep(ms) {
