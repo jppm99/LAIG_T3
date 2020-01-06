@@ -262,7 +262,7 @@ class XMLscene extends CGFscene {
             else this.pick = undefined;
         }
         if(this.pick!==undefined) {
-            console.log("Picked object: " + obj + ", with pick id " + this.pick);
+            //console.log("Picked object: " + obj + ", with pick id " + this.pick);
         }
     }
 
@@ -599,44 +599,48 @@ class XMLscene extends CGFscene {
             }
         }
 
-        let valorInicial = this.visualBoardPos(XI, YI, "empty");
-        let valorIntermedio="undefined";
-        let valorFinal="undefined";
+        var valorInicial = this.visualBoardPos(XI, YI, "empty");
+        var valorIntermedio="undefined";
+        var valorFinal="undefined";
 
-        if(XF >= 0 && YF >= 0) {
-            valorFinal=this.visualBoardPos(XF, YF, valorInicial);
-        }
-
-        if(moveTwoSpaces){
-            let XInt=XI;
-            let YInt=YI;
-            if(XI!==XF){
-                XInt=Math.abs(XF-XI);
-            }
-            if(YI!==YF){
-                YInt=Math.abs(YF-YI);
-            }
-
-            valorIntermedio=this.visualBoardPos(XInt, YInt, "empty");
-           // console.log(XInt);
-           // console.log(YInt);
-           // console.log(valorIntermedio);
-        }
 
         if(valorInicial!=="empty"){
+            if(XF >= 0 && YF >= 0) {
+                valorFinal=this.visualBoardPos(XF, YF, valorInicial);
+            }
+
+            if(moveTwoSpaces){
+                let XInt=XI;
+                let YInt=YI;
+
+                if(XF!==XInt){
+                    if(XF<XInt){
+                        XInt--;
+                    }else{
+                        XInt++;
+                    }
+                }
+                if(YF!==YInt){
+                    if(YF<YInt){
+                        YInt--;
+                    }else{
+                        YInt++;
+                    }
+                }
+
+                valorIntermedio=this.visualBoardPos(XInt, YInt, "empty");
+            }
+
             this.graph.components[valorInicial].addRunningAnimation(correspondingIAnimation);
+
+            if(valorIntermedio!=="undefined" && valorIntermedio!=="empty"){
+                this.graph.components[valorIntermedio].addRunningAnimation(correspondingIntermediateAnimation);
+            }
+
+            if(valorFinal!=="undefined" && valorFinal!=="empty"){
+                this.graph.components[valorFinal].addRunningAnimation(correspondingFAnimation);
+            }
         }
-
-        if(valorIntermedio!=="undefined" && valorFinal!=="empty"){
-            this.graph.components[valorFinal].addRunningAnimation(correspondingIntermediateAnimation);
-        }
-
-        if(valorFinal!=="undefined" && valorFinal!=="empty"){
-            this.graph.components[valorFinal].addRunningAnimation(correspondingFAnimation);
-        }
-
-        console.log(this.pieceIDBoard);
-
     }
 
 
@@ -655,13 +659,12 @@ class XMLscene extends CGFscene {
 
         let indice3 = (X-1) % 4;
 
-        var temp = this.pieceIDBoard[indice1][indice2][indice3];
+        let temp = this.pieceIDBoard[indice1][indice2][indice3];
 
         if(P != undefined) {
             this.pieceIDBoard[indice1][indice2][indice3] = P;
         }
 
-        //console.log(temp);
         return temp;
     }
 
