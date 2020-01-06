@@ -77,6 +77,32 @@ class XMLscene extends CGFscene {
         this.transparencyShader=new CGFshader(this.gl, "shaders/sc.vert", "shaders/transparency.frag");
 
         //AuxiliaryBoard To reach each Piece Id More easily
+        this.pieceIDBoard=[
+            [
+                ["whitePieceNumber1-Of-board-up-left","whitePieceNumber2-Of-board-up-left","whitePieceNumber3-Of-board-up-left","whitePieceNumber4-Of-board-up-left"],
+                ["empty","empty","empty","empty"],
+                ["empty","empty","empty","empty"],
+                ["blackPieceNumber1-Of-board-up-left","blackPieceNumber2-Of-board-up-left","blackPieceNumber3-Of-board-up-left","blackPieceNumber4-Of-board-up-left"]
+            ],
+            [
+                ["whitePieceNumber1-Of-board-down-right","whitePieceNumber2-Of-board-down-right","whitePieceNumber3-Of-board-down-right","whitePieceNumber4-Of-board-down-right"],
+                ["empty","empty","empty","empty"],
+                ["empty","empty","empty","empty"],
+                ["blackPieceNumber1-Of-board-down-right","blackPieceNumber2-Of-board-down-right","blackPieceNumber3-Of-board-down-right","blackPieceNumber4-Of-board-down-right"]
+            ],
+            [
+                ["whitePieceNumber1-Of-board-down-left","whitePieceNumber2-Of-board-down-left","whitePieceNumber3-Of-board-down-left","whitePieceNumber4-Of-board-down-left"],
+                ["empty","empty","empty","empty"],
+                ["empty","empty","empty","empty"],
+                ["blackPieceNumber1-Of-board-down-left","blackPieceNumber2-Of-board-down-left","blackPieceNumber3-Of-board-down-left","blackPieceNumber4-Of-board-down-left"]
+            ],
+            [
+                ["whitePieceNumber1-Of-board-up-right","whitePieceNumber2-Of-board-up-right","whitePieceNumber3-Of-board-up-right","whitePieceNumber4-Of-board-up-right"],
+                ["empty","empty","empty","empty"],
+                ["empty","empty","empty","empty"],
+                ["blackPieceNumber1-Of-board-up-right","blackPieceNumber2-Of-board-up-right","blackPieceNumber3-Of-board-up-right","blackPieceNumber4-Of-board-up-right"]
+            ]
+        ];
         this.resetPicking();
 
         //AuxiliaryBoard To reach each Cell Id More easily
