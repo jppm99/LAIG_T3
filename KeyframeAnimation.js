@@ -8,7 +8,7 @@
  * @param currInstant - Time in seconds since the start of scene render.
  * */
 class KeyframeAnimation extends Animation {
-    constructor(scene, keyframes) {
+    constructor(scene, keyframes, delay= 0) {
         super();
         this.scene = scene;
         this.keyframes = keyframes;
@@ -17,6 +17,7 @@ class KeyframeAnimation extends Animation {
         this.currentKeyFrameIndex = 0;
 
         this.time=0;
+        this.delay=delay*RUNNING_ANIMATION_DURATION;
 
         this.inicial_translate_coords=[0,0,0];
         this.inicial_rotate_coords=[0,0,0];
@@ -37,7 +38,7 @@ class KeyframeAnimation extends Animation {
 
         if(this.animationDone) return;
 
-        if(this.time > this.keyframes[this.currentKeyFrameIndex].instant){
+        if(this.time > this.keyframes[this.currentKeyFrameIndex].instant+this.delay){
 
             this.inicial_translate_coords=this.keyframes[this.currentKeyFrameIndex].translate_coords;
             this.inicial_rotate_coords=this.keyframes[this.currentKeyFrameIndex].rotate_coords;
@@ -81,10 +82,21 @@ class KeyframeAnimation extends Animation {
     }
 
     calculateAnimationValues(){
-        var currDeltaTime=(this.time-this.previousInstant)/this.scene.SCENE_UPDATE_PERIOD;
+        var currDeltaTime=(this.time-(this.previousInstant+this.delay))/this.scene.SCENE_UPDATE_PERIOD;
 
-        if(this.time<0) {
+        if(currDeltaTime<0) {
             currDeltaTime = 0;
+            this.translateFactor[0]=0;
+            this.translateFactor[1]=0;
+            this.translateFactor[2]=0;
+
+            this.rotateFactor[0]=0;
+            this.rotateFactor[1]=0;
+            this.rotateFactor[2]=0;
+
+            this.scaleFactor[0]=1;
+            this.scaleFactor[1]=1;
+            this.scaleFactor[2]=1;
         }
 
         //translation

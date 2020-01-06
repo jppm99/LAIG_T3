@@ -93,10 +93,16 @@ class SceneComponent {
     }
 
     addRunningAnimation(runningAnimationRef){
-        var copiedAnimation = new KeyframeAnimation(this.scene, this.scene.graph.animations[runningAnimationRef].keyframes);
-        //this.scene.runningAnimationDelay+=RUNNING_ANIMATION_DURATION;
-        //copiedAnimation.time-=this.scene.runningAnimationDelay;
+        var copiedAnimation = new KeyframeAnimation(this.scene, this.scene.graph.animations[runningAnimationRef].keyframes,this.scene.runningAnimationDelay);
         this.runningAnimatons.push(copiedAnimation)
+    }
+
+    addRunningAnimationDelay(){
+        this.scene.runningAnimationDelay+=1;
+    }
+
+    removeRunningAnimationDelay(){
+        this.scene.runningAnimationDelay+=1;
     }
 
     selectedByPicking(sel){
