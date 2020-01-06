@@ -271,7 +271,7 @@ class Game {
     movie() {
         console.log("movie!");
         
-        this.clearBoard();
+        this.clearBoard(true);
 
         for(let i = 0; i < this.changesList.length; i++) {
             //this.changesList[i].forEach(this.updateBoard);
